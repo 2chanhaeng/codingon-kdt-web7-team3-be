@@ -9,12 +9,12 @@ export class UserService {
 
   async user(where: Prisma.UserWhereUniqueInput): Promise<User | null> {
     // DEBUG
-    return this.db.user.findUnique({
+    return await this.db.user.findUnique({
       where,
     });
   }
   async get(id: string): Promise<User | null> {
-    return this.db.user.findUnique({ where: { id } });
+    return await this.db.user.findUnique({ where: { id } });
   }
 
   async users() {
@@ -25,20 +25,20 @@ export class UserService {
   }
 
   async auth(id: string): Promise<User | null> {
-    return this.db.user.findUnique({
+    return await this.db.user.findUnique({
       where: { id },
     });
   }
 
   async login(where: Prisma.UserWhereUniqueInput, select: Prisma.UserSelect) {
-    return this.db.user.findUnique({
+    return (await this.db.user.findUnique({
       where,
       select,
-    }) as Promise<UserAuthDto | null>;
+    })) as UserAuthDto;
   }
 
   async create(data: Prisma.UserCreateInput) {
-    const user = this.db.user.create({
+    const user = await this.db.user.create({
       data,
     });
     return { success: !!user };
