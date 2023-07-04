@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  relationMode = "prisma"
+  url          = env("DATABASE_URL")
+}
+
+model User {
+  id       String    @id @default(uuid())
+  username String    @unique
+  password String
+  salt     String
+  refresh  String?
+  profiles Profile[]
+
+  @@unique([id, refresh], name: "user_refresh")
+}
+
+model Tag {
+  id         String     @id @default(uuid())
+  name       String
+  infomation String
+  profiles   Profile[]
+  posts      Post[]
+  chatrooms  Chatroom[]
+}
+
+model Profile {
+  id         String     @id @default(uuid())
+  infomation String
+  user       User       @relation(fields: [userId], references: [id])
+  userId     String
+  tags       Tag[]
+  follows    Follows[]  @relation("to")
+  followers  Follows[]  @relation("from")
+  posts      Post[]
+  chatrooms  Chatroom[]
+
+  @@index([userId])
+}
+
+model Follows {
+  from   Profile @relation("from", fields: [fromId], references: [id])
+  fromId String
+  to     Profile @relation("to", fields: [toId], references: [id])
+  toId   String
+
+  @@id([fromId, toId])
+  @@index([fromId])
+  @@index([toId])
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  content   String
+  profile   Profile  @relation(fields: [profileId], references: [id])
+  profileId String
+  tags      Tag[]
+  createdAt DateTime @default(now())
+
+  @@index([profileId])
+}
+
+model Chatroom {
+  id       String    @id @default(uuid())
+  title    String
+  profiles Profile[]
+  tags     Tag[]
+}
