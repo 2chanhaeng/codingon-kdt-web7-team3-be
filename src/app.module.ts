@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { UserModule } from "./user/user.module";
 import { LoginModule } from "./login/login.module";
+import { SignupModule } from "./signup/signup.module";
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { LoginModule } from "./login/login.module";
     }),
     UserModule,
     LoginModule,
+    SignupModule,
   ],
   controllers: [],
   providers: [],
