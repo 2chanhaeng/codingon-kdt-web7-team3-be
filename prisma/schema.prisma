@@ -39,6 +39,7 @@ model Profile {
   posts       Post[]
   chatrooms   Chatroom[]
 
+  @@unique([userId, id], name: "userProfile")
   @@index([userId])
 }
 
