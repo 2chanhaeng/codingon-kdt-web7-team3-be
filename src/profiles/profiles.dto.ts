@@ -15,3 +15,7 @@ export class FindDto implements Prisma.ProfileWhereUniqueInput {
   readonly id: string;
 }
 
+export class UpdateDto implements Prisma.ProfileUncheckedUpdateInput {
+  @IsString()
+  readonly information: string;
+}

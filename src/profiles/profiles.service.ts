@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Profile, Prisma } from "@prisma/client";
 import { PrismaService } from "~/prisma.service";
-import { CreateDto, FindDto } from "./profiles.dto";
+import { CreateDto, FindDto, UpdateDto } from "./profiles.dto";
 
 @Injectable()
 export class ProfilesService {
@@ -31,7 +31,7 @@ export class ProfilesService {
     return await this.db.profile.create({ data, select });
   }
 
-  async update(where: FindDto, data: Prisma.ProfileUpdateInput) {
+  async update(where: FindDto, data: UpdateDto) {
     return await this.db.profile.update({ where, data });
   }
 }
