@@ -16,7 +16,7 @@ export class ProfilesService {
 
   /** 팔로워 수 순으로 프로필 조회 */
   async getByFollowersCountRankings(
-    cursorId: string | null,
+    cursorId?: string,
   ): Promise<Profile[] | null> {
     const where = {};
     const take = 10;
