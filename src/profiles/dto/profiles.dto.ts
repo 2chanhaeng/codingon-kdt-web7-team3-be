@@ -30,6 +30,12 @@ export class CreateReqDto {
   readonly body: ReqBodyDto;
 }
 
+/** 로그인한 유저의 ID만 추출하는 DTO */
+export class LoginReqDto {
+  @ValidateNested()
+  readonly user: ReqUserDto;
+}
+
 export class FindDto implements Prisma.ProfileWhereUniqueInput {
   @IsString()
   readonly id: string;
