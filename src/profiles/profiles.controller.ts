@@ -1,7 +1,7 @@
-import { Controller, UseGuards, Post, Req } from "@nestjs/common";
+import { Controller, UseGuards, Post, Req, Get } from "@nestjs/common";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { ProfilesService } from "./profiles.service";
-import { CreateReqDto } from "./dto/profiles.dto";
+import { CreateReqDto, LoginReqDto } from "./dto/profiles.dto";
 
 @Controller("profiles")
 export class ProfilesController {
@@ -19,5 +19,14 @@ export class ProfilesController {
     const { information } = body;
     const { id: userId } = user;
     return this.profiles.create({ userId, information });
+  }
+
+  /**
+   * `GET /profiles`: 현재 로그인된 유저의 모든 프로필 조회
+   */
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getByUserId(@Req() { user: { id: userId } }: LoginReqDto) {
+    return this.profiles.getByUserId(userId);
   }
 }
