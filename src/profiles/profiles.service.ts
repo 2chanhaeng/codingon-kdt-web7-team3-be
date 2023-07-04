@@ -34,4 +34,14 @@ export class ProfilesService {
   async update(where: FindDto, data: UpdateDto) {
     return await this.db.profile.update({ where, data });
   }
+
+  /** userId 유저가 작성한 포스트 조회 */
+  async getPosts(where: FindDto, cursorId: string | null) {
+    const take = 10;
+    const skip = cursorId ? 1 : 0;
+    const cursor = cursorId ? { id: cursorId } : undefined;
+    const orderBy = { createdAt: Prisma.SortOrder.desc };
+    const postsArgs = { take, skip, cursor, orderBy };
+    return await this.db.profile.findUnique({ where }).posts(postsArgs);
+  }
 }
