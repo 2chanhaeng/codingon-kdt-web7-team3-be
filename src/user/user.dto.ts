@@ -10,3 +10,19 @@ export class UserAuthDto {
   @IsString()
   password: string;
 }
+
+export class CreateUserDto {
+  @IsString()
+  username: string;
+
+  @IsString()
+  password: string;
+}
+
+export class LoginUserDto {
+  @IsString()
+  username: string;
+
+  @IsString()
+  password: string;
+}
