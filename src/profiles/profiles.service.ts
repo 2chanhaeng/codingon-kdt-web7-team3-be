@@ -72,4 +72,9 @@ export class ProfilesService {
     const followersArgs = { take, skip, cursor, orderBy };
     return await this.db.profile.findUnique({ where }).followers(followersArgs);
   }
+
+  /** fromId 가 toId 를 구독 */
+  async follow(data: FollowsDto) {
+    return await this.db.follows.create({ data });
+  }
 }
