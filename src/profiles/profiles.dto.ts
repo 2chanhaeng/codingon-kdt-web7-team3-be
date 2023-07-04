@@ -10,3 +10,8 @@ export class CreateDto implements Prisma.ProfileUncheckedCreateInput {
   readonly information: string;
 }
 
+export class FindDto implements Prisma.ProfileWhereUniqueInput {
+  @IsString()
+  readonly id: string;
+}
+

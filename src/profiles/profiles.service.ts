@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Profile, Prisma } from "@prisma/client";
 import { PrismaService } from "~/prisma.service";
-import { CreateDto } from "./profiles.dto";
+import { CreateDto, FindDto } from "./profiles.dto";
 
 @Injectable()
 export class ProfilesService {
@@ -26,12 +26,12 @@ export class ProfilesService {
     return await this.db.profile.findMany(findManyArgs);
   }
 
-  async create(data: CreateDto): Promise<{ id: string }> {
+  async create(data: CreateDto): Promise<FindDto> {
     const select = { id: true };
     return await this.db.profile.create({ data, select });
   }
 
-  async update(where: { id: string }, data: Prisma.ProfileUpdateInput) {
+  async update(where: FindDto, data: Prisma.ProfileUpdateInput) {
     return await this.db.profile.update({ where, data });
   }
 }
