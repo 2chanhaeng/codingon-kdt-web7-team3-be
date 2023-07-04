@@ -26,16 +26,18 @@ export class ProfilesService {
     return await this.db.profile.findMany(findManyArgs);
   }
 
+  /** 현재 접속한 유저의 프로필 생성 */
   async create(data: CreateDto): Promise<FindDto> {
     const select = { id: true };
     return await this.db.profile.create({ data, select });
   }
 
+  /** 현재 접속한 프로필 정보 수정 */
   async update(where: FindDto, data: UpdateDto) {
     return await this.db.profile.update({ where, data });
   }
 
-  /** userId 유저가 작성한 포스트 조회 */
+  /** id 프로필이 작성한 포스트 조회 */
   async getPosts(where: FindDto, cursorId: string | null) {
     const take = 10;
     const skip = cursorId ? 1 : 0;
