@@ -30,4 +30,8 @@ export class ProfilesService {
     const select = { id: true };
     return await this.db.profile.create({ data, select });
   }
+
+  async update(where: { id: string }, data: Prisma.ProfileUpdateInput) {
+    return await this.db.profile.update({ where, data });
+  }
 }
