@@ -44,4 +44,9 @@ export class ProfilesService {
     const postsArgs = { take, skip, cursor, orderBy };
     return await this.db.profile.findUnique({ where }).posts(postsArgs);
   }
+
+  /** id 프로필이 구독하고 있는 태그 조회 */
+  async getTags(where: FindDto) {
+    return await this.db.profile.findUnique({ where }).tags();
+  }
 }
