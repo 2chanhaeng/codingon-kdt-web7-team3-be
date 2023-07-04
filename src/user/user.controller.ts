@@ -1,7 +1,8 @@
 import * as crypto from "crypto";
 import { Body, Controller, Get, Post, UseGuards, Param } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
-import { CreateUserDto } from "@/dto/user.dto";
+import { JwtAuthGuard } from "~/jwt/jwt.guard";
+import { CreateUserDto } from "./user.dto";
 import { UserService } from "./user.service";
 
 @Controller("user")
@@ -25,5 +26,12 @@ export class UserController {
   @Get()
   async findAll() {
     return this.userService.users();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(":username")
+  async findOne(@Param() where: { username: string }) {
+    // DEBUG
+    return this.userService.user(where);
   }
 }
