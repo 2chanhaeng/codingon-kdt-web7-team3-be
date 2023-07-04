@@ -63,4 +63,13 @@ export class ProfilesService {
     return await this.db.profile.findUnique({ where }).follows(followsArgs);
   }
 
+  /** id 프로필을 구독하고 있는 유저 조회 */
+  async getFollowers(where: FindDto, cursorId: FollowsDto | null) {
+    const take = 10;
+    const skip = cursorId ? 1 : 0;
+    const cursor = cursorId ? { fromId_toId: cursorId } : undefined;
+    const orderBy = { fromId: Prisma.SortOrder.desc };
+    const followersArgs = { take, skip, cursor, orderBy };
+    return await this.db.profile.findUnique({ where }).followers(followersArgs);
+  }
 }
