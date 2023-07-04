@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Profile, Prisma } from "@prisma/client";
 import { PrismaService } from "~/prisma.service";
 import { CreateDto, FindDto, UpdateDto } from "./dto/profiles.dto";
+import { FollowsDto } from "./dto/follows.dto";
 
 @Injectable()
 export class ProfilesService {
@@ -51,4 +52,15 @@ export class ProfilesService {
   async getTags(where: FindDto) {
     return await this.db.profile.findUnique({ where }).tags();
   }
+
+  /** id 프로필이 구독하고 있는 유저 조회 */
+  async getFollows(where: FindDto, cursorId: FollowsDto | null) {
+    const take = 10;
+    const skip = cursorId ? 1 : 0;
+    const cursor = cursorId ? { fromId_toId: cursorId } : undefined;
+    const orderBy = { toId: Prisma.SortOrder.desc };
+    const followsArgs = { take, skip, cursor, orderBy };
+    return await this.db.profile.findUnique({ where }).follows(followsArgs);
+  }
+
 }
