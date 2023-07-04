@@ -1,5 +1,6 @@
 import { IsString, ValidateNested } from "class-validator";
 import { Prisma } from "@prisma/client";
+import { JwtPayloadDto } from "@/src/jwt/jwt.dto";
 
 /** 프로필 생성 DTO */
 export class CreateDto implements Prisma.ProfileUncheckedCreateInput {
@@ -10,12 +11,6 @@ export class CreateDto implements Prisma.ProfileUncheckedCreateInput {
   readonly information: string;
 }
 
-class ReqUserDto {
-  // req.user : JwtAuthGuard에서 자동으로 생성하는 객체
-  @IsString()
-  readonly id: string;
-}
-
 class ReqBodyDto {
   // req.body : 요청의 body
   @IsString()
@@ -24,7 +19,7 @@ class ReqBodyDto {
 
 export class CreateReqDto {
   @ValidateNested()
-  readonly user: ReqUserDto;
+  readonly user: JwtPayloadDto;
 
   @ValidateNested()
   readonly body: ReqBodyDto;
@@ -33,7 +28,7 @@ export class CreateReqDto {
 /** 로그인한 유저의 ID만 추출하는 DTO */
 export class LoginReqDto {
   @ValidateNested()
-  readonly user: ReqUserDto;
+  readonly user: JwtPayloadDto;
 }
 
 export class FindDto implements Prisma.ProfileWhereUniqueInput {

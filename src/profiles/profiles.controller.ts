@@ -17,7 +17,7 @@ export class ProfilesController {
   @Post()
   async create(@Req() { body, user }: CreateReqDto) {
     const { information } = body;
-    const { id: userId } = user;
+    const { userId } = user;
     return this.profiles.create({ userId, information });
   }
 
@@ -26,7 +26,7 @@ export class ProfilesController {
    */
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getByUserId(@Req() { user: { id: userId } }: LoginReqDto) {
+  async getByUserId(@Req() { user: { userId } }: LoginReqDto) {
     return this.profiles.getByUserId(userId);
   }
 
