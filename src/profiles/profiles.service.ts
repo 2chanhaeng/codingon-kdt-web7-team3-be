@@ -77,4 +77,11 @@ export class ProfilesService {
   async follow(data: FollowsDto) {
     return await this.db.follows.create({ data });
   }
+
+  /** userId의 유저가 id의 프로필을 가지고 있는지 확인 */
+  async isUserOwnProfile(userId: string, id: string) {
+    const where = { id, userId };
+    const select = { id: true };
+    return await this.db.profile.findUnique({ where, select });
+  }
 }
