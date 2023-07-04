@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Profile, Prisma } from "@prisma/client";
 import { PrismaService } from "~/prisma.service";
+import { CreateProfileDto } from "./profiles.dto";
 
 @Injectable()
 export class ProfilesService {
@@ -23,5 +24,10 @@ export class ProfilesService {
     const orderBy = { followers: { _count: Prisma.SortOrder.desc } };
     const findManyArgs = { where, take, skip, cursor, orderBy };
     return await this.db.profile.findMany(findManyArgs);
+  }
+
+  async create(data: CreateProfileDto): Promise<{ id: string }> {
+    const select = { id: true };
+    return await this.db.profile.create({ data, select });
   }
 }
