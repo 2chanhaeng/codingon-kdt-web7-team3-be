@@ -109,4 +109,16 @@ export class ProfileController {
     const cursorId = cursor ? { fromId: id, toId: cursor } : undefined;
     return this.profiles.getFollows({ id }, cursorId);
   }
+
+  /**
+   * `GET /profile/:id/followers?cursor=:cursor`: id 프로필을 구독하고 있는 유저 조회
+   */
+  @Get("followers")
+  async getFollowers(
+    @Param("id") id: string,
+    @Query("cursor") cursor?: string,
+  ) {
+    const cursorId = cursor ? { fromId: cursor, toId: id } : undefined;
+    return this.profiles.getFollows({ id }, cursorId);
+  }
 }
