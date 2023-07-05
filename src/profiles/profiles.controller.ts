@@ -9,7 +9,12 @@ import {
 } from "@nestjs/common";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { ProfilesService } from "./profiles.service";
-import { AsReqDto, CreateReqDto, LoginReqDto } from "./dto/profiles.dto";
+import {
+  AsReqDto,
+  CreateReqDto,
+  FollowReqDto,
+  LoginReqDto,
+} from "./dto/profiles.dto";
 
 @Controller("profiles")
 export class ProfilesController {
@@ -120,5 +125,16 @@ export class ProfileController {
   ) {
     const cursorId = cursor ? { fromId: cursor, toId: id } : undefined;
     return this.profiles.getFollows({ id }, cursorId);
+  }
+
+  /**
+   * `GET /profile/:id/follow`: id 프로필을 구독
+   */
+  @UseGuards(JwtAuthGuard)
+  @Get("follow")
+  async follow(@Req() { params, user }: FollowReqDto) {
+    const { id: toId } = params;
+    const { userId: fromId } = user;
+    return this.profiles.follow({ fromId, toId });
   }
 }
