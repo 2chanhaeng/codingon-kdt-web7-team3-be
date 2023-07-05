@@ -3,16 +3,19 @@ import { LoginController } from "./login.controller";
 import { LoginService } from "./login.service";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
-import { JwtStrategy } from "../jwt/jwt.strategy";
-import { UserService } from "~/user/user.service";
-import { PrismaService } from "~/prisma.service";
+import { UserModule } from "~/user/user.module";
+import { JwtStrategy } from "~/jwt/jwt.strategy";
+import { ProfilesModule } from "../profiles/profiles.module";
 
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: "jwt", session: false }),
     JwtModule.register({}),
+    UserModule,
+    ProfilesModule,
   ],
   controllers: [LoginController],
-  providers: [LoginService, JwtStrategy, UserService, PrismaService], // strategy 의존성 주입을 위해서
+  providers: [LoginService, JwtStrategy],
+  exports: [LoginService],
 })
 export class LoginModule {}
