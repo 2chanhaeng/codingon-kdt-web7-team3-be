@@ -92,4 +92,12 @@ export class ProfileController {
   async getPosts(@Param("id") id: string, @Query("cursor") cursor?: string) {
     return this.profiles.getPosts({ id }, cursor);
   }
+
+  /**
+   * `GET /profile/:id/tags`: id 프로필이 구독하고 있는 태그 조회
+   */
+  @Get("tags")
+  async getTags(@Param("id") id: string) {
+    return this.profiles.getTags({ id });
+  }
 }
