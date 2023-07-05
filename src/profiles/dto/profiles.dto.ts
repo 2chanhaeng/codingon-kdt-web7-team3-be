@@ -53,3 +53,11 @@ export class AsReqDto {
   @ValidateNested()
   readonly params: AsProfileDto;
 }
+
+export class FollowReqDto {
+  @ValidateNested()
+  readonly user: JwtPayloadDto;
+
+  @ValidateNested()
+  readonly params: FindDto;
+}
