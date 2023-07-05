@@ -94,4 +94,10 @@ export class ProfilesService {
     const data = { userId, profileId: id };
     return this.login.genAccess(data);
   }
+
+  /** id로 프로필 조회 */
+  async get(id: string) {
+    const where = { id };
+    return await this.db.profile.findUnique({ where });
+  }
 }
