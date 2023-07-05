@@ -1,7 +1,7 @@
 import { Controller, UseGuards, Post, Req, Get, Param } from "@nestjs/common";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { ProfilesService } from "./profiles.service";
-import { CreateReqDto, LoginReqDto } from "./dto/profiles.dto";
+import { AsReqDto, CreateReqDto, LoginReqDto } from "./dto/profiles.dto";
 
 @Controller("profiles")
 export class ProfilesController {
@@ -44,5 +44,23 @@ export class ProfilesController {
   @Get("famous/:cursor")
   async getFamousWithCursor(@Param("cursor") cursor: string) {
     return this.profiles.getByFollowersCountRankings(cursor);
+  }
+
+  /**
+   * `GET /profiles/as/:id`: id 프로필로 접속
+   * 기존의 Access 토큰 속 유저가 프로필을 소유하고 있는지 확인한 후
+   * 소유한다면 Access 토큰에 프로필을 추가하여 반환
+   */
+  @UseGuards(JwtAuthGuard)
+  @Get("as/:id")
+  async connectAs(@Req() { params, user }: AsReqDto) {
+    const { id } = params; // URL 파라미터에서 프로필 ID 추출
+    const { userId } = user; // ACCESS 토큰에서 유저 ID 추출
+    // 유저가 프로필을 소유하고 있는지 확인
+    const owned = await this.profiles.isUserOwnProfile(userId, id);
+    // 소유하지 않는다면 빈 객체 반환
+    if (!owned) return {};
+    // 소유한다면 Access 토큰에 프로필 ID 추가
+    return this.profiles.addProfileToAccess(userId, id);
   }
 }
