@@ -3,10 +3,14 @@ import { Profile, Prisma } from "@prisma/client";
 import { PrismaService } from "~/prisma.service";
 import { CreateDto, FindDto, UpdateDto } from "./dto/profiles.dto";
 import { FollowsDto } from "./dto/follows.dto";
+import { LoginService } from "../login/login.service";
 
 @Injectable()
 export class ProfilesService {
-  constructor(private readonly db: PrismaService) {}
+  constructor(
+    private readonly db: PrismaService,
+    private readonly login: LoginService,
+  ) {}
 
   /** userId 유저의 모든 프로필 조회 */
   async getByUserId(userId: string): Promise<Profile[] | null> {
@@ -83,5 +87,11 @@ export class ProfilesService {
     const where = { id, userId };
     const select = { id: true };
     return await this.db.profile.findUnique({ where, select });
+  }
+
+  /** Access 토큰에 프로필 추가 */
+  async addProfileToAccess(userId: string, id: string) {
+    const data = { userId, profileId: id };
+    return this.login.genAccess(data);
   }
 }
