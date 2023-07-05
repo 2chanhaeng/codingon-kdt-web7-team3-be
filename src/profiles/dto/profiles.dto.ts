@@ -41,6 +41,14 @@ export class UpdateDto implements Prisma.ProfileUncheckedUpdateInput {
   readonly information: string;
 }
 
+export class UpdateReqDto {
+  @ValidateNested()
+  readonly user: JwtPayloadDto;
+
+  @ValidateNested()
+  readonly body: ReqBodyDto;
+}
+
 class AsProfileDto {
   @IsString()
   readonly id: string;
