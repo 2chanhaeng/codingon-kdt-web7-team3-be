@@ -1,15 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { Profile, Prisma } from "@prisma/client";
-import { PrismaService } from "~/prisma.service";
+import { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
+import { PrismaService } from "~/prisma/prisma.service";
 import { CreateDto, FindDto, UpdateDto } from "./dto/profiles.dto";
 import { FollowsDto } from "./dto/follows.dto";
-import { LoginService } from "../login/login.service";
 
 @Injectable()
 export class ProfilesService {
   constructor(
     private readonly db: PrismaService,
-    private readonly login: LoginService,
+    private readonly jwt: JwtService,
+    private readonly config: ConfigService,
   ) {}
 
   /** userId 유저의 모든 프로필 조회 */
@@ -92,7 +94,11 @@ export class ProfilesService {
   /** Access 토큰에 프로필 추가 */
   async addProfileToAccess(userId: string, id: string) {
     const data = { userId, profileId: id };
-    return this.login.genAccess(data);
+    const access = this.jwt.sign(data, {
+      secret: this.config.get<string>("ACCESS_SECRET"),
+      expiresIn: "1y",
+    });
+    return { access };
   }
 
   /** id로 프로필 조회 */
