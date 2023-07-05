@@ -65,5 +65,15 @@ export class ProfilesController {
   }
 }
 
-@Controller("profiles/:id")
-export class ProfileController {}
+@Controller("profile/:id")
+export class ProfileController {
+  constructor(private readonly profiles: ProfilesService) {}
+
+  /**
+   * `GET /profile/:id`: id 프로필 조회
+   */
+  @Get()
+  async get(@Param("id") id: string) {
+    return this.profiles.get(id);
+  }
+}
