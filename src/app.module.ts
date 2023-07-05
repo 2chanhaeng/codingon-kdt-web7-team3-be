@@ -5,6 +5,7 @@ import { LoginModule } from "./login/login.module";
 import { SignupModule } from "./signup/signup.module";
 import { ProfilesModule } from "./profiles/profiles.module";
 import { PrismaModule } from "./prisma/prisma.module";
+import { ChatsModule } from "./chats/chats.module";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PrismaModule } from "./prisma/prisma.module";
     SignupModule,
     ProfilesModule,
     PrismaModule,
+    ChatsModule,
   ],
   controllers: [],
   providers: [],
