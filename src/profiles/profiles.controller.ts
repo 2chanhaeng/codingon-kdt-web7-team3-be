@@ -100,4 +100,13 @@ export class ProfileController {
   async getTags(@Param("id") id: string) {
     return this.profiles.getTags({ id });
   }
+
+  /**
+   * `GET /profile/:id/follows?cursor=:cursor`: id 프로필이 구독하고 있는 유저 조회
+   */
+  @Get("follows")
+  async getFollows(@Param("id") id: string, @Query("cursor") cursor?: string) {
+    const cursorId = cursor ? { fromId: id, toId: cursor } : undefined;
+    return this.profiles.getFollows({ id }, cursorId);
+  }
 }
