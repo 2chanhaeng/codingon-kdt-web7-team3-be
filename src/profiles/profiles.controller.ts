@@ -64,3 +64,6 @@ export class ProfilesController {
     return this.profiles.addProfileToAccess(userId, id);
   }
 }
+
+@Controller("profiles/:id")
+export class ProfileController {}
