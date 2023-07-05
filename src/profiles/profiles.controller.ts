@@ -44,18 +44,10 @@ export class ProfilesController {
   }
 
   /**
-   * `GET /profiles/famous`: 구독 수가 많은 순서대로 정렬된 프로필 조회
+   * `GET /profiles/famous?cursor=:cursor`: 구독 수가 많은 순서대로 정렬된 프로필 조회
    */
   @Get("famous")
-  async getFamous() {
-    return this.profiles.getByFollowersCountRankings();
-  }
-
-  /**
-   * `GET /profiles/famous/:cursor`: `cursor` 뒤로 구독 수가 많은 순서대로 정렬된 프로필 조회
-   */
-  @Get("famous/:cursor")
-  async getFamousWithCursor(@Param("cursor") cursor: string) {
+  async getFamousWithCursor(@Query("cursor") cursor: string) {
     return this.profiles.getByFollowersCountRankings(cursor);
   }
 
