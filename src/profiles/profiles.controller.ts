@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Query,
+  Patch,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { ProfilesService } from "./profiles.service";
@@ -14,6 +15,7 @@ import {
   CreateReqDto,
   FollowReqDto,
   LoginReqDto,
+  UpdateReqDto,
 } from "./dto/profiles.dto";
 
 @Controller("profiles")
@@ -32,6 +34,16 @@ export class ProfilesController {
     const { information } = body;
     const { userId } = user;
     return this.profiles.create({ userId, information });
+  }
+
+  /**
+   * `PATCH /profiles`: 프로필 수정
+   */
+  @UseGuards(JwtAuthGuard)
+  @Patch()
+  async update(@Req() { body: data, user }: UpdateReqDto) {
+    const { userId: id } = user;
+    return this.profiles.update({ id }, data);
   }
 
   /**
