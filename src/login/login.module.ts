@@ -21,5 +21,6 @@ import { ProfilesService } from "~/profiles/profiles.service";
     PrismaService,
     ProfilesService,
   ], // strategy 의존성 주입을 위해서
+  exports: [LoginService],
 })
 export class LoginModule {}
