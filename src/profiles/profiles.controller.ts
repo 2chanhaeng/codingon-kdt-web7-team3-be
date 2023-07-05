@@ -1,4 +1,12 @@
-import { Controller, UseGuards, Post, Req, Get, Param } from "@nestjs/common";
+import {
+  Controller,
+  UseGuards,
+  Post,
+  Req,
+  Get,
+  Param,
+  Query,
+} from "@nestjs/common";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { ProfilesService } from "./profiles.service";
 import { AsReqDto, CreateReqDto, LoginReqDto } from "./dto/profiles.dto";
@@ -75,5 +83,13 @@ export class ProfileController {
   @Get()
   async get(@Param("id") id: string) {
     return this.profiles.get(id);
+  }
+
+  /**
+   * `GET /profile/:id/posts?cursor=:cursor`: id 프로필이 작성한 포스트 조회
+   */
+  @Get("posts")
+  async getPosts(@Param("id") id: string, @Query("cursor") cursor?: string) {
+    return this.profiles.getPosts({ id }, cursor);
   }
 }
