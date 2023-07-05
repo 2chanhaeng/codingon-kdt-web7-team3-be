@@ -43,7 +43,7 @@ export class ProfilesService {
   }
 
   /** id 프로필이 작성한 포스트 조회 */
-  async getPosts(where: FindDto, cursorId: string | null) {
+  async getPosts(where: FindDto, cursorId?: string) {
     const take = 10;
     const skip = cursorId ? 1 : 0;
     const cursor = cursorId ? { id: cursorId } : undefined;
@@ -58,7 +58,7 @@ export class ProfilesService {
   }
 
   /** id 프로필이 구독하고 있는 유저 조회 */
-  async getFollows(where: FindDto, cursorId: FollowsDto | null) {
+  async getFollows(where: FindDto, cursorId?: FollowsDto) {
     const take = 10;
     const skip = cursorId ? 1 : 0;
     const cursor = cursorId ? { fromId_toId: cursorId } : undefined;
