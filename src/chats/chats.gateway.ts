@@ -24,6 +24,12 @@ export class ChatsGateway
     console.log("connect");
     console.log(client.id);
   }
+
+  handleDisconnect(client: Socket) {
+    console.log(client.id);
+    console.log("disconnect");
+  }
+
   @SubscribeMessage("message")
   handleMessage(client: any, payload: any): string {
     return "Hello world!";
