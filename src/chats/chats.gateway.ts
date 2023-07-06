@@ -19,6 +19,11 @@ export class ChatsGateway
     console.count("Init");
     console.log(server.sockets.adapter.rooms);
   }
+
+  handleConnection(client: Socket) {
+    console.log("connect");
+    console.log(client.id);
+  }
   @SubscribeMessage("message")
   handleMessage(client: any, payload: any): string {
     return "Hello world!";
