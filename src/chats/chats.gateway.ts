@@ -1,6 +1,6 @@
 import { SubscribeMessage, WebSocketGateway } from "@nestjs/websockets";
+@WebSocketGateway(81, { transports: ["websocket"] })
 
-@WebSocketGateway()
 export class ChatsGateway {
   @SubscribeMessage("message")
   handleMessage(client: any, payload: any): string {
