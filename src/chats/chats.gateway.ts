@@ -5,6 +5,8 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  ConnectedSocket,
+  MessageBody,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 
@@ -31,7 +33,14 @@ export class ChatsGateway
   }
 
   @SubscribeMessage("message")
-  handleMessage(client: any, payload: any): string {
-    return "Hello world!";
+  handleEvent(
+    @MessageBody() data: string,
+    @ConnectedSocket() client: Socket,
+  ): string {
+    console.log("chat message");
+    console.log(data);
+    console.log(client.id);
+    console.log(client.rooms);
+    return data;
   }
 }
