@@ -26,8 +26,12 @@ export class ChatsGateway
   }
 
   handleConnection(client: Socket) {
-    console.log("connect");
-    console.log(client.id);
+    console.log(client.id, "connected");
+    // 방 목록 전송 TODO: DB 연결 후 수정 필요
+    const rooms = Array.from(this.rooms).map(([id, { roomname }]) => {
+      return { id, roomname };
+    });
+    client.emit("rooms", rooms);
   }
 
   handleDisconnect(client: Socket) {
