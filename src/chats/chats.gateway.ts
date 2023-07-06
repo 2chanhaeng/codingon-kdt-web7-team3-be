@@ -9,11 +9,14 @@ import {
   MessageBody,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
+import { RoomDto } from "./dto/chats.dto";
 
 @WebSocketGateway(81, { transports: ["websocket"] })
 export class ChatsGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
+  rooms: Map<string, RoomDto> = new Map(); // TODO: DB와 연결
+
   @WebSocketServer()
   server: Server;
 
