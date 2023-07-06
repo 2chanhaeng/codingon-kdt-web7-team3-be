@@ -9,7 +9,7 @@ import {
   MessageBody,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
-import { RoomDto } from "./dto/chats.dto";
+import { RoomDto, MessageDto } from "./dto/chats.dto";
 
 @WebSocketGateway(81, { transports: ["websocket"] })
 export class ChatsGateway
@@ -60,14 +60,15 @@ export class ChatsGateway
   }
 
   @SubscribeMessage("message")
-  handleEvent(
-    @MessageBody() data: string,
+  handleMessage(
+    @MessageBody() message: MessageDto,
     @ConnectedSocket() client: Socket,
-  ): string {
-    console.log("chat message");
-    console.log(data);
-    console.log(client.id);
-    console.log(client.rooms);
-    return data;
+  ) {
+    console.log(client.id, "message", message, "to", message.roomId);
+    // 본인에게도 메시지 전송(전송 확인용)
+    client.emit("message", message);
+    // 전송한 방에 메시지 전송
+    client.to(message.roomId).emit("message", message);
+    return message;
   }
 }
