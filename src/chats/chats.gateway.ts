@@ -52,6 +52,13 @@ export class ChatsGateway
     return id;
   }
 
+  @SubscribeMessage("join")
+  handleJoin(@MessageBody("id") id: string, @ConnectedSocket() client: Socket) {
+    console.log(client.id, "join into", id);
+    client.join(id);
+    return id;
+  }
+
   @SubscribeMessage("message")
   handleEvent(
     @MessageBody() data: string,
