@@ -35,6 +35,23 @@ export class ChatsGateway
     console.log("disconnect");
   }
 
+  @SubscribeMessage("create")
+  handleCreate(
+    @MessageBody("roomname") roomname: string,
+    @ConnectedSocket() client: Socket,
+  ) {
+    console.log(client.id, "create", roomname);
+    // 랜덤 방 ID 생성
+    const id = Math.random().toString(36).substring(2, 11);
+    // 방 정보 저장 TODO: DB와 연결
+    this.rooms.set(id, { id, roomname });
+    // 최초 생성 유저 방에 입장
+    client.join(id);
+    // 방 목록 전송 DEBUG: DB 연결 후에는 삭제
+    this.server.emit("rooms", [{ id, roomname }]);
+    return id;
+  }
+
   @SubscribeMessage("message")
   handleEvent(
     @MessageBody() data: string,
