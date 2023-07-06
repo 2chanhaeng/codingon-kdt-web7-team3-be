@@ -8,3 +8,10 @@ export class MessageDto {
   readonly text: string;
 }
 
+export class RoomDto {
+  @IsString()
+  readonly id: string;
+
+  @IsString()
+  readonly roomname: string;
+}
