@@ -15,6 +15,10 @@ export class ChatsGateway
   @WebSocketServer()
   server: Server;
 
+  afterInit(server: Server) {
+    console.count("Init");
+    console.log(server.sockets.adapter.rooms);
+  }
   @SubscribeMessage("message")
   handleMessage(client: any, payload: any): string {
     return "Hello world!";
