@@ -35,8 +35,7 @@ export class ChatsGateway
   }
 
   handleDisconnect(client: Socket) {
-    console.log(client.id);
-    console.log("disconnect");
+    console.log(client.id, "disconnected");
   }
 
   @SubscribeMessage("create")
