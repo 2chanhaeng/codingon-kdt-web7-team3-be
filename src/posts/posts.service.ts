@@ -12,10 +12,15 @@ export class PostsService {
     });
   }
 
-  async reads(where: Prisma.PostWhereInput) {
-    return await this.prisma.post.findMany({
-      where,
-    });
+  async reads(
+    where: Prisma.PostWhereInput,
+    cursor?: Prisma.PostWhereUniqueInput,
+  ) {
+    const take = 10;
+    const skip = cursor ? 1 : 0;
+    const orderBy = { createdAt: Prisma.SortOrder.desc };
+    const findManyArgs = { take, skip, orderBy, where, cursor };
+    return await this.prisma.post.findMany(findManyArgs);
   }
 
   async read(where: Prisma.PostWhereUniqueInput) {
