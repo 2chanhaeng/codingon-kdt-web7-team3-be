@@ -11,4 +11,10 @@ export class PostsService {
       data,
     });
   }
+
+  async reads(where: Prisma.PostWhereInput) {
+    return await this.prisma.post.findMany({
+      where,
+    });
+  }
 }
