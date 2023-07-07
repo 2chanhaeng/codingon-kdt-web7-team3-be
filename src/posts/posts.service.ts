@@ -17,4 +17,10 @@ export class PostsService {
       where,
     });
   }
+
+  async read(where: Prisma.PostWhereUniqueInput) {
+    return await this.prisma.post.findUnique({
+      where,
+    });
+  }
 }
