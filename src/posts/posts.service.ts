@@ -23,4 +23,14 @@ export class PostsService {
       where,
     });
   }
+
+  async update(
+    where: Prisma.PostWhereUniqueInput,
+    data: Prisma.PostUncheckedUpdateInput,
+  ) {
+    return await this.prisma.post.update({
+      where,
+      data,
+    });
+  }
 }
