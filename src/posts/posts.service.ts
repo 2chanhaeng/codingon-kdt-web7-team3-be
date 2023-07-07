@@ -33,4 +33,10 @@ export class PostsService {
       data,
     });
   }
+
+  async delete(where: Prisma.PostWhereUniqueInput) {
+    return await this.prisma.post.delete({
+      where,
+    });
+  }
 }
