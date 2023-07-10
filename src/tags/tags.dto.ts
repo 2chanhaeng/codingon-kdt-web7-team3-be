@@ -1,5 +1,6 @@
 import { IntersectionType, PartialType } from "@nestjs/swagger";
 import { Prisma } from "@prisma/client";
+import { ValidateNested } from "class-validator";
 import { IdDto } from "~/dto/abstract.dto";
 import { TagNameDto, TagInfoDto } from "~/dto/property.dto";
 
@@ -13,7 +14,6 @@ export class WhereUniqueDto
 export class ReadDto extends WhereUniqueDto {}
 
 class NameOrInfoDto extends PartialType(NameAndInfoDto) {}
-export class SearchDto extends NameOrInfoDto implements Prisma.TagWhereInput {}
 export class UpdateBodyDto
   extends NameOrInfoDto
   implements Prisma.TagUncheckedUpdateInput {}
@@ -27,3 +27,8 @@ export class UpdateDto
   implements Prisma.TagUncheckedUpdateInput {}
 
 export class DeleteDto extends IdDto implements Prisma.TagWhereUniqueInput {}
+
+export class SearchDto implements Prisma.TagWhereInput {
+  @ValidateNested({ each: true })
+  readonly OR: Prisma.TagWhereInput[];
+}
