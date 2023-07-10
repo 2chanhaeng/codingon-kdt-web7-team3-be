@@ -80,4 +80,10 @@ export class TagController {
   ) {
     return await this.tags.subscribeTag(profileId, tagId);
   }
+
+  /** `GET /tag/:id/profiles?cursor=:cursor`: 태그 구독자 조회 */
+  @Get(":id/profiles")
+  async profiles(@Param("id") id: string, @Query("cursor") cursor?: string) {
+    return await this.tags.getProfiles(id, cursor);
+  }
 }
