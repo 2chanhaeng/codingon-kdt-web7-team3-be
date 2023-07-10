@@ -2,9 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "~/prisma/prisma.service";
 import {
   CreateDto,
+  DeleteDto,
   WhereUniqueDto,
+  UpdateBodyDto,
+  UpdateDataDto,
   SearchDto,
+  SubscribeDto,
 } from "./tags.dto";
+import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class TagsService {
@@ -102,5 +107,13 @@ export class TagsService {
     }; // TODO: 가입자 순으로 정렬
     const chatroomsArgs = { take, skip, cursor, orderBy };
     return await this.db.tag.findUnique({ where }).subjects(chatroomsArgs);
+  }
+
+  async subscribe(data: SubscribeDto) {
+    return await this.db.subscribes.create({ data });
+  }
+
+  async subscribeTag(profileId: string, tagId: string) {
+    return await this.subscribe({ profileId, tagId });
   }
 }
