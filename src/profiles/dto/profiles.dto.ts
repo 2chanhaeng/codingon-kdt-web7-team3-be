@@ -1,71 +1,19 @@
-import { IsString, ValidateNested } from "class-validator";
 import { Prisma } from "@prisma/client";
-import { JwtPayloadDto } from "@/src/jwt/jwt.dto";
+import { IntersectionType, PartialType } from "@nestjs/swagger";
+import { UserIdDto } from "~/dto/property.dto";
+import { IdDto } from "~/dto/abstract.dto";
+import { ProfInfoDto, ProfNameDto } from "./property.dto";
 
 /** 프로필 생성 DTO */
-export class CreateDto implements Prisma.ProfileUncheckedCreateInput {
-  @IsString()
-  readonly userId: string;
+export class CreateProfileDto
+  extends IntersectionType(UserIdDto, ProfNameDto, ProfInfoDto)
+  implements Prisma.ProfileUncheckedCreateInput {}
 
-  @IsString()
-  readonly information: string;
-}
+class UpdateAllPropsDto extends IntersectionType(ProfNameDto, ProfInfoDto) {}
 
-class ReqBodyDto {
-  // req.body : 요청의 body
-  @IsString()
-  readonly information: string;
-}
+export class UpdateDto
+  extends PartialType(UpdateAllPropsDto)
+  implements Prisma.ProfileUncheckedUpdateInput {}
 
-export class CreateReqDto {
-  @ValidateNested()
-  readonly user: JwtPayloadDto;
-
-  @ValidateNested()
-  readonly body: ReqBodyDto;
-}
-
-/** 로그인한 유저의 ID만 추출하는 DTO */
-export class LoginReqDto {
-  @ValidateNested()
-  readonly user: JwtPayloadDto;
-}
-
-export class FindDto implements Prisma.ProfileWhereUniqueInput {
-  @IsString()
-  readonly id: string;
-}
-
-export class UpdateDto implements Prisma.ProfileUncheckedUpdateInput {
-  @IsString()
-  readonly information: string;
-}
-
-export class UpdateReqDto {
-  @ValidateNested()
-  readonly user: JwtPayloadDto;
-
-  @ValidateNested()
-  readonly body: ReqBodyDto;
-}
-
-class AsProfileDto {
-  @IsString()
-  readonly id: string;
-}
-
-export class AsReqDto {
-  @ValidateNested()
-  readonly user: JwtPayloadDto;
-
-  @ValidateNested()
-  readonly params: AsProfileDto;
-}
-
-export class FollowReqDto {
-  @ValidateNested()
-  readonly user: JwtPayloadDto;
-
-  @ValidateNested()
-  readonly params: FindDto;
-}
+export class FindDto extends IdDto implements Prisma.ProfileWhereUniqueInput {}
+export class SelectProfDto extends FindDto {}

@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { UserService } from "~/user/user.service";
-import { JwtPayloadDto } from "~/jwt/jwt.dto";
+import { JwtUserDto, JwtResDto } from "~/jwt/jwt.dto";
 
 @Injectable()
 export class LoginService {
@@ -26,7 +26,7 @@ export class LoginService {
     return this.genAccess({ userId: id });
   }
 
-  genAccess(data: JwtPayloadDto) {
+  genAccess(data: JwtUserDto): JwtResDto {
     const access = this.jwt.sign(data, {
       secret: this.config.get<string>("ACCESS_SECRET"),
       expiresIn: "1y",

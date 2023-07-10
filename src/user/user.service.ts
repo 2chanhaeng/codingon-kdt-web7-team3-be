@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { User, Prisma } from "@prisma/client";
-import { PrismaService } from "@/src/prisma/prisma.service";
+import { PrismaService } from "~/prisma/prisma.service";
 import { UserAuthDto } from "./user.dto";
 
 @Injectable()
@@ -41,6 +41,6 @@ export class UserService {
     const user = await this.db.user.create({
       data,
     });
-    return { success: !!user };
+    return user;
   }
 }

@@ -3,7 +3,7 @@ import { Profile, Prisma } from "@prisma/client";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "~/prisma/prisma.service";
-import { CreateDto, FindDto, UpdateDto } from "./dto/profiles.dto";
+import { CreateProfileDto, FindDto, UpdateDto } from "./dto/profiles.dto";
 import { FollowsDto } from "./dto/follows.dto";
 
 @Injectable()
@@ -34,7 +34,12 @@ export class ProfilesService {
   }
 
   /** 현재 접속한 유저의 프로필 생성 */
-  async create(data: CreateDto): Promise<FindDto> {
+  async create(data: CreateProfileDto) {
+    return await this.db.profile.create({ data });
+  }
+
+  /** 현재 접속한 유저의 프로필 생성 */
+  async createProfile(data: CreateProfileDto) {
     const select = { id: true };
     return await this.db.profile.create({ data, select });
   }
@@ -92,8 +97,10 @@ export class ProfilesService {
   }
 
   /** Access 토큰에 프로필 추가 */
-  async addProfileToAccess(userId: string, id: string) {
-    const data = { userId, profileId: id };
+  async addProfileToAccess(userId: string, profileId: string) {
+    const owned = await this.isUserOwnProfile(userId, profileId);
+    if (!owned) return {};
+    const data = { userId, profileId };
     const access = this.jwt.sign(data, {
       secret: this.config.get<string>("ACCESS_SECRET"),
       expiresIn: "1y",

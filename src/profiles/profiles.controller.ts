@@ -2,57 +2,53 @@ import {
   Controller,
   UseGuards,
   Post,
-  Req,
   Get,
   Param,
   Query,
   Patch,
+  Body,
 } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { ProfilesService } from "./profiles.service";
-import {
-  AsReqDto,
-  CreateReqDto,
-  FollowReqDto,
-  LoginReqDto,
-  UpdateReqDto,
-} from "./dto/profiles.dto";
+import { CreateProfileDto, UpdateDto } from "./dto/profiles.dto";
+import { ApiBearerAuth } from "@nestjs/swagger";
+import { Jwt } from "~/jwt/jwt.decorator";
 
+@ApiTags("Profiles")
 @Controller("profiles")
 export class ProfilesController {
   constructor(private readonly profiles: ProfilesService) {}
 
   /**
    * `POST /profiles`: 프로필 생성
-   *
-   * 요청의 user에서 userId(JwtAuthGuard에 의해 생성됨),
-   * body에서 information을 추출하여 프로필 생성
    */
+  @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Req() { body, user }: CreateReqDto) {
-    const { information } = body;
-    const { userId } = user;
-    return this.profiles.create({ userId, information });
+  async create(@Jwt("userId") id: string, @Body() body: CreateProfileDto) {
+    return this.profiles.create({ userId: id, ...body });
   }
 
   /**
    * `PATCH /profiles`: 프로필 수정
    */
+  @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Patch()
-  async update(@Req() { body: data, user }: UpdateReqDto) {
-    const { userId: id } = user;
-    return this.profiles.update({ id }, data);
+  async update(@Jwt("profileId") id: string, @Body() body: UpdateDto) {
+    return this.profiles.update({ id }, body);
   }
 
   /**
    * `GET /profiles`: 현재 로그인된 유저의 모든 프로필 조회
    */
+  @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getByUserId(@Req() { user: { userId } }: LoginReqDto) {
-    return this.profiles.getByUserId(userId);
+  async getByUserId(@Jwt("userId") id: string) {
+    console.log("getByUserId", id);
+    return this.profiles.getByUserId(id);
   }
 
   /**
@@ -68,20 +64,18 @@ export class ProfilesController {
    * 기존의 Access 토큰 속 유저가 프로필을 소유하고 있는지 확인한 후
    * 소유한다면 Access 토큰에 프로필을 추가하여 반환
    */
+  @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Get("as/:id")
-  async connectAs(@Req() { params, user }: AsReqDto) {
-    const { id } = params; // URL 파라미터에서 프로필 ID 추출
-    const { userId } = user; // ACCESS 토큰에서 유저 ID 추출
-    // 유저가 프로필을 소유하고 있는지 확인
-    const owned = await this.profiles.isUserOwnProfile(userId, id);
-    // 소유하지 않는다면 빈 객체 반환
-    if (!owned) return {};
-    // 소유한다면 Access 토큰에 프로필 ID 추가
-    return this.profiles.addProfileToAccess(userId, id);
+  async connectAs(
+    @Jwt("userId") userId: string,
+    @Param("id") profileId: string,
+  ) {
+    return this.profiles.addProfileToAccess(userId, profileId);
   }
 }
 
+@ApiTags("Profile")
 @Controller("profile/:id")
 export class ProfileController {
   constructor(private readonly profiles: ProfilesService) {}
@@ -134,11 +128,10 @@ export class ProfileController {
   /**
    * `GET /profile/:id/follow`: id 프로필을 구독
    */
+  @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Get("follow")
-  async follow(@Req() { params, user }: FollowReqDto) {
-    const { id: toId } = params;
-    const { userId: fromId } = user;
+  async follow(@Jwt("userId") fromId: string, @Param("id") toId: string) {
     return this.profiles.follow({ fromId, toId });
   }
 }

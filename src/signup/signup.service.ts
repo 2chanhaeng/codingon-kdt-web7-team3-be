@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import * as crypto from "crypto";
-import { CreateUserDto } from "~/user/user.dto";
-import { UserService } from "../user/user.service";
+import { SignupUserDto } from "~/user/user.dto";
+import { UserService } from "~/user/user.service";
 
 @Injectable()
 export class SignupService {
   constructor(private readonly user: UserService) {}
-  async create({ username, password: plain }: CreateUserDto) {
+  async signup({ username, password: plain }: SignupUserDto) {
     const salt = crypto.randomBytes(16).toString("hex");
     const password = crypto
       .pbkdf2Sync(plain, salt, 1000, 64, "sha512")
@@ -16,6 +16,7 @@ export class SignupService {
       password,
       salt,
     };
-    return this.user.create(data);
+    const user = await this.user.create(data);
+    return { success: !!user };
   }
 }

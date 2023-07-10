@@ -3,8 +3,8 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ConfigService } from "@nestjs/config";
 import { UserService } from "~/user/user.service";
-import { JwtPayloadDto } from "./jwt.dto";
-import { ProfilesService } from "../profiles/profiles.service";
+import { ProfilesService } from "~/profiles/profiles.service";
+import { JwtMaybeProfileDto as JwtValidateDto } from "./jwt.dto";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -19,7 +19,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate({ userId, profileId }: JwtPayloadDto): Promise<JwtPayloadDto> {
+  async validate({
+    userId,
+    profileId,
+  }: JwtValidateDto): Promise<JwtValidateDto> {
     const user = await this.user.get(userId);
     if (!user) {
       throw new UnauthorizedException("접근 오류");
