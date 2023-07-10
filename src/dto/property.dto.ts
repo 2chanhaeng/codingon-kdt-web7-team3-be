@@ -65,3 +65,22 @@ export class AccessDto {
   readonly access: string;
 }
 
+export class ContentDto {
+  @ApiProperty({
+    description: "게시물의 내용",
+    example: genString(),
+    type: String,
+  })
+  @IsString()
+  readonly content: string;
+}
+
+export class TagsDto {
+  @ApiProperty({
+    description: "게시물의 태그",
+    example: [genUuid(), genUuid()],
+    type: [String],
+  })
+  @IsUUID("all", { each: true })
+  readonly tags: string[];
+}
