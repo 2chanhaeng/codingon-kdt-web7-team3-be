@@ -8,11 +8,13 @@ import {
   Patch,
   Body,
 } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { ProfilesService } from "./profiles.service";
 import { CreateProfileDto, UpdateDto } from "./dto/profiles.dto";
 import { Jwt } from "~/jwt/jwt.decorator";
 
+@ApiTags("Profiles")
 @Controller("profiles")
 export class ProfilesController {
   constructor(private readonly profiles: ProfilesService) {}
