@@ -7,6 +7,7 @@ import {
   Query,
   Patch,
   Body,
+  Delete,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
@@ -59,5 +60,13 @@ export class TagController {
   @Patch(":id")
   async update(@Param("id") id: string, @Body() body: UpdateBodyDto) {
     return await this.tags.updateTag(id, body);
+  }
+
+  /** `DELETE /tag/:id`: 태그 삭제 */
+  @ApiBearerAuth("access")
+  @UseGuards(JwtAuthGuard)
+  @Delete(":id")
+  async delete(@Param("id") id: string) {
+    return await this.tags.deleteTag(id);
   }
 }
