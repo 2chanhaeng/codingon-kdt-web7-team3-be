@@ -12,6 +12,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { ProfilesService } from "./profiles.service";
 import { CreateProfileDto, UpdateDto } from "./dto/profiles.dto";
+import { ApiBearerAuth } from "@nestjs/swagger";
 import { Jwt } from "~/jwt/jwt.decorator";
 
 @ApiTags("Profiles")
@@ -21,10 +22,8 @@ export class ProfilesController {
 
   /**
    * `POST /profiles`: 프로필 생성
-   *
-   * 요청의 user에서 userId(JwtAuthGuard에 의해 생성됨),
-   * body에서 information을 추출하여 프로필 생성
    */
+  @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Jwt("userId") id: string, @Body() body: CreateProfileDto) {
@@ -34,6 +33,7 @@ export class ProfilesController {
   /**
    * `PATCH /profiles`: 프로필 수정
    */
+  @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Patch()
   async update(@Jwt("profileId") id: string, @Body() body: UpdateDto) {
@@ -43,6 +43,7 @@ export class ProfilesController {
   /**
    * `GET /profiles`: 현재 로그인된 유저의 모든 프로필 조회
    */
+  @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Get()
   async getByUserId(@Jwt("userId") id: string) {
@@ -63,6 +64,7 @@ export class ProfilesController {
    * 기존의 Access 토큰 속 유저가 프로필을 소유하고 있는지 확인한 후
    * 소유한다면 Access 토큰에 프로필을 추가하여 반환
    */
+  @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Get("as/:id")
   async connectAs(
@@ -73,6 +75,7 @@ export class ProfilesController {
   }
 }
 
+@ApiTags("Profile")
 @Controller("profile/:id")
 export class ProfileController {
   constructor(private readonly profiles: ProfilesService) {}
@@ -125,6 +128,7 @@ export class ProfileController {
   /**
    * `GET /profile/:id/follow`: id 프로필을 구독
    */
+  @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Get("follow")
   async follow(@Jwt("userId") fromId: string, @Param("id") toId: string) {
