@@ -7,6 +7,7 @@ import { ProfilesModule } from "./profiles/profiles.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { ChatsModule } from "./chats/chats.module";
 import { PostsModule } from "./posts/posts.module";
+import { TagsModule } from "./tags/tags.module";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { PostsModule } from "./posts/posts.module";
     PrismaModule,
     ChatsModule,
     PostsModule,
+    TagsModule,
   ],
   controllers: [],
   providers: [],
