@@ -3,6 +3,7 @@ import {
   UseGuards,
   Post,
   Get,
+  Param,
   Query,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
@@ -44,4 +45,8 @@ export class TagsController {
     return await this.tags.searchTag(q);
   }
 }
+
+@ApiTags("Tag")
+@Controller("tag")
+export class TagController {
 }
