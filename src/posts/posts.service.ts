@@ -35,6 +35,17 @@ export class PostsService {
     return await this.prisma.post.findMany(findManyArgs);
   }
 
+  async readsSubscribesAndFollows(profileId: string, id: string) {
+    const where = {
+      OR: [
+        { tags: { some: { profiles: { some: { id: profileId } } } } }, // 구독한 태그의 게시물
+        { profile: { follows: { some: { fromId: profileId } } } }, // 구독한 유저의 게시물
+      ],
+    };
+    const cursor = id ? { id } : undefined;
+    return await this.reads(where, cursor);
+  }
+
   async read(where: Prisma.PostWhereUniqueInput) {
     return await this.prisma.post.findUnique({
       where,
