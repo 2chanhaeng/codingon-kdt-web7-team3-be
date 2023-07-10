@@ -87,4 +87,20 @@ export class TagsService {
     const profilesArgs = { take, skip, cursor, orderBy };
     return await this.db.tag.findUnique({ where }).subscribes(profilesArgs);
   }
+
+  async getChats(tagId: string, chatroomId?: string) {
+    const where = { id: tagId };
+    const take = 10;
+    const skip = chatroomId ? 1 : 0;
+    const cursor = chatroomId && { id: { tagId, chatroomId } };
+    const orderBy = {
+      chatroom: {
+        chatters: {
+          _count: Prisma.SortOrder.desc,
+        },
+      },
+    }; // TODO: 가입자 순으로 정렬
+    const chatroomsArgs = { take, skip, cursor, orderBy };
+    return await this.db.tag.findUnique({ where }).subjects(chatroomsArgs);
+  }
 }
