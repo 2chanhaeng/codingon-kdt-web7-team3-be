@@ -16,9 +16,7 @@ export class PostsService {
   async createPost(profileId: string, { tags, ...body }: PostDto) {
     const data = {
       profileId,
-      tags: {
-        connect: tags.map((id) => ({ id })),
-      },
+      tags: { connect: tags.map((id) => ({ id })) },
       ...body,
     };
     return await this.create(data);
@@ -82,5 +80,29 @@ export class PostsService {
   async deletePost(profileId: string, id: string) {
     const where = { profileId, id };
     return await this.delete(where);
+  }
+
+  async search(where: Prisma.PostWhereInput) {
+    return await this.prisma.post.findMany({ where });
+  }
+
+  async searchPost(q: string, tags: string[]) {
+    return await this.search(this.keywordAndTags(q, tags));
+  }
+
+  keywordAndTags(q: string, tags: string[]) {
+    return this.searchAnd(this.searchByTags(tags), this.searchByKeyword(q));
+  }
+
+  searchAnd(...where: Prisma.PostWhereInput[]) {
+    return { AND: where };
+  }
+
+  searchByTags(tags: string[]) {
+    return { tags: { some: { id: { in: tags } } } };
+  }
+
+  searchByKeyword(q: string) {
+    return { content: { contains: q } };
   }
 }
