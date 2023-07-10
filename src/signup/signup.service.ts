@@ -16,6 +16,7 @@ export class SignupService {
       password,
       salt,
     };
-    return this.user.create(data);
+    const user = await this.user.create(data);
+    return { success: !!user };
   }
 }
