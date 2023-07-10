@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -11,7 +12,7 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { Jwt } from "~/jwt/jwt.decorator";
 import { PostsService } from "./posts.service";
-import { PostDto } from "./posts.dto";
+import { PostDto, PatchBodyDto } from "./posts.dto";
 
 @ApiTags("Posts")
 @Controller("posts")
@@ -47,5 +48,19 @@ export class PostsController {
   @Get(":id")
   async getPost(@Param("id") id: string) {
     return this.posts.read({ id });
+  }
+
+  /**
+   * `PATCH /posts/:id`: 게시물 수정
+   */
+  @ApiBearerAuth("access")
+  @UseGuards(JwtAuthGuard)
+  @Patch(":id")
+  async patch(
+    @Jwt("profileId") profileId: string,
+    @Param("id") id: string,
+    @Body() body: PatchBodyDto,
+  ) {
+    return this.posts.updatePost(profileId, { id, ...body });
   }
 }
