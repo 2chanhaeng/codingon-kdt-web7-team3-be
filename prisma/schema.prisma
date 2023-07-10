@@ -42,6 +42,7 @@ model Profile {
   posts       Post[]
   chatrooms   Chatroom[]
   subscribes  Subscribes[]
+  chatters    Chatters[]
 
   @@unique([userId, id], name: "userProfile")
   @@index([userId])
@@ -86,6 +87,7 @@ model Chatroom {
   profiles Profile[]
   tags     Tag[]
   subjects Subjects[]
+  chatters Chatters[]
 }
 
 model Subjects {
@@ -97,4 +99,15 @@ model Subjects {
   @@id([chatroomId, tagId], name: "id")
   @@index([chatroomId])
   @@index([tagId])
+}
+
+model Chatters {
+  profile    Profile  @relation(fields: [profileId], references: [id])
+  profileId  String
+  chatroom   Chatroom @relation(fields: [chatroomId], references: [id])
+  chatroomId String
+
+  @@id([profileId, chatroomId], name: "id")
+  @@index([profileId])
+  @@index([chatroomId])
 }
