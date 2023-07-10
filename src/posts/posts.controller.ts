@@ -13,7 +13,7 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { Jwt } from "~/jwt/jwt.decorator";
 import { PostsService } from "./posts.service";
-import { PostDto, PatchBodyDto } from "./posts.dto";
+import { PostDto, PatchBodyDto, SearchDto } from "./posts.dto";
 
 @ApiTags("Posts")
 @Controller("posts")
@@ -73,5 +73,14 @@ export class PostsController {
   @Delete(":id")
   async delete(@Jwt("profileId") profileId: string, @Param("id") id: string) {
     return this.posts.deletePost(profileId, id);
+  }
+
+  /**
+   * `POST /posts/search`: 게시물 검색
+   * 태그 ID가 길고, 양이 많을 수 있으므로 POST로 처리
+   */
+  @Post("search")
+  async search(@Body() { q, tags }: SearchDto) {
+    return this.posts.searchPost(q, tags);
   }
 }
