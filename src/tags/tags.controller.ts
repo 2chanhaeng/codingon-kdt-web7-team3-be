@@ -28,4 +28,12 @@ export class TagsController {
   async read(@Param("id") id: string) {
     return await this.tags.readTag(id);
   }
+
+  /** `GET /tags`: 구독중인 태그 조회 */
+  @ApiBearerAuth("access")
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async reads(@Jwt("profileId") id: string) {
+    return await this.tags.readTags(id);
+  }
 }
