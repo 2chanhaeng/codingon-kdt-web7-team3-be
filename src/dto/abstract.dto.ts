@@ -21,7 +21,7 @@ export class InfoDto {
 
 export class QueryDto {
   @ApiProperty({
-    description: "쿼리",
+    description: "검색어",
     example: genString(),
     type: String,
   })
