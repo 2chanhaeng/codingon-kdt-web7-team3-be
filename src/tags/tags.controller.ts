@@ -5,12 +5,14 @@ import {
   Get,
   Param,
   Query,
+  Patch,
+  Body,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { Jwt } from "~/jwt/jwt.decorator";
 import { TagsService } from "./tags.service";
-import { CreateDto } from "./tags.dto";
+import { CreateDto, UpdateBodyDto } from "./tags.dto";
 
 @ApiTags("Tags")
 @Controller("tags")
@@ -50,4 +52,12 @@ export class TagsController {
 @Controller("tag")
 export class TagController {
   constructor(private readonly tags: TagsService) {}
+
+  /** `PATCH /tag/:id`: 태그 수정 */
+  @ApiBearerAuth("access")
+  @UseGuards(JwtAuthGuard)
+  @Patch(":id")
+  async update(@Param("id") id: string, @Body() body: UpdateBodyDto) {
+    return await this.tags.updateTag(id, body);
+  }
 }
