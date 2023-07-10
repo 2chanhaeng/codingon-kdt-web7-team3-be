@@ -65,4 +65,14 @@ export class TagsService {
   async deleteTag(id: string) {
     return await this.delete({ id });
   }
+
+  async getPosts(tagId: string, cursorId?: string) {
+    const where = { id: tagId };
+    const take = 10;
+    const skip = cursorId ? 1 : 0;
+    const cursor = cursorId ? { id: cursorId } : undefined;
+    const orderBy = { createdAt: Prisma.SortOrder.desc };
+    const postsArgs = { take, skip, cursor, orderBy };
+    return await this.db.tag.findUnique({ where }).posts(postsArgs);
+  }
 }
