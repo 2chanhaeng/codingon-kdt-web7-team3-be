@@ -43,4 +43,9 @@ export class TagsService {
   contains(attr: keyof Prisma.TagWhereInput) {
     return (q: string) => ({ [attr]: { contains: q } });
   }
+
+  async readTags(profileId: string) {
+    const where = { profiles: { some: { id: profileId } } };
+    return await this.db.tag.findMany({ where });
+  }
 }
