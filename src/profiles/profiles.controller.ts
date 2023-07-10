@@ -2,21 +2,16 @@ import {
   Controller,
   UseGuards,
   Post,
-  Req,
   Get,
   Param,
   Query,
   Patch,
+  Body,
 } from "@nestjs/common";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { ProfilesService } from "./profiles.service";
-import {
-  AsReqDto,
-  CreateReqDto,
-  FollowReqDto,
-  LoginReqDto,
-  UpdateReqDto,
-} from "./dto/profiles.dto";
+import { CreateProfileDto, UpdateDto } from "./dto/profiles.dto";
+import { Jwt } from "~/jwt/jwt.decorator";
 
 @Controller("profiles")
 export class ProfilesController {
@@ -30,10 +25,8 @@ export class ProfilesController {
    */
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Req() { body, user }: CreateReqDto) {
-    const { information } = body;
-    const { userId } = user;
-    return this.profiles.create({ userId, information });
+  async create(@Jwt("userId") id: string, @Body() body: CreateProfileDto) {
+    return this.profiles.create({ userId: id, ...body });
   }
 
   /**
@@ -41,9 +34,8 @@ export class ProfilesController {
    */
   @UseGuards(JwtAuthGuard)
   @Patch()
-  async update(@Req() { body: data, user }: UpdateReqDto) {
-    const { userId: id } = user;
-    return this.profiles.update({ id }, data);
+  async update(@Jwt("profileId") id: string, @Body() body: UpdateDto) {
+    return this.profiles.update({ id }, body);
   }
 
   /**
@@ -51,8 +43,9 @@ export class ProfilesController {
    */
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getByUserId(@Req() { user: { userId } }: LoginReqDto) {
-    return this.profiles.getByUserId(userId);
+  async getByUserId(@Jwt("userId") id: string) {
+    console.log("getByUserId", id);
+    return this.profiles.getByUserId(id);
   }
 
   /**
@@ -70,15 +63,11 @@ export class ProfilesController {
    */
   @UseGuards(JwtAuthGuard)
   @Get("as/:id")
-  async connectAs(@Req() { params, user }: AsReqDto) {
-    const { id } = params; // URL 파라미터에서 프로필 ID 추출
-    const { userId } = user; // ACCESS 토큰에서 유저 ID 추출
-    // 유저가 프로필을 소유하고 있는지 확인
-    const owned = await this.profiles.isUserOwnProfile(userId, id);
-    // 소유하지 않는다면 빈 객체 반환
-    if (!owned) return {};
-    // 소유한다면 Access 토큰에 프로필 ID 추가
-    return this.profiles.addProfileToAccess(userId, id);
+  async connectAs(
+    @Jwt("userId") userId: string,
+    @Param("id") profileId: string,
+  ) {
+    return this.profiles.addProfileToAccess(userId, profileId);
   }
 }
 
@@ -136,9 +125,7 @@ export class ProfileController {
    */
   @UseGuards(JwtAuthGuard)
   @Get("follow")
-  async follow(@Req() { params, user }: FollowReqDto) {
-    const { id: toId } = params;
-    const { userId: fromId } = user;
+  async follow(@Jwt("userId") fromId: string, @Param("id") toId: string) {
     return this.profiles.follow({ fromId, toId });
   }
 }

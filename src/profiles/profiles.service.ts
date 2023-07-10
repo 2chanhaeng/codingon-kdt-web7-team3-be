@@ -92,8 +92,10 @@ export class ProfilesService {
   }
 
   /** Access 토큰에 프로필 추가 */
-  async addProfileToAccess(userId: string, id: string) {
-    const data = { userId, profileId: id };
+  async addProfileToAccess(userId: string, profileId: string) {
+    const owned = await this.isUserOwnProfile(userId, profileId);
+    if (!owned) return {};
+    const data = { userId, profileId };
     const access = this.jwt.sign(data, {
       secret: this.config.get<string>("ACCESS_SECRET"),
       expiresIn: "1y",
