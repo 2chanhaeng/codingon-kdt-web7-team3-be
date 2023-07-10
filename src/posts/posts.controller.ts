@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -62,5 +63,15 @@ export class PostsController {
     @Body() body: PatchBodyDto,
   ) {
     return this.posts.updatePost(profileId, { id, ...body });
+  }
+
+  /**
+   * `DELETE /posts/:id`: 게시물 삭제
+   */
+  @ApiBearerAuth("access")
+  @UseGuards(JwtAuthGuard)
+  @Delete(":id")
+  async delete(@Jwt("profileId") profileId: string, @Param("id") id: string) {
+    return this.posts.deletePost(profileId, id);
   }
 }
