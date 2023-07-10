@@ -1,7 +1,6 @@
 import { IsString, IsUUID } from "class-validator";
 import { ApiProperty, IntersectionType } from "@nestjs/swagger";
-import { genString, genUuid } from "@/utils/test";
-import { IdDto } from "./abstract.dto";
+import { genString, genUuid } from "@/utils/example";
 
 export class UserIdDto {
   @ApiProperty({

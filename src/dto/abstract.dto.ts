@@ -1,4 +1,4 @@
-import { genString } from "@/utils/test";
+import { genString } from "@/utils/example";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class IdDto {
