@@ -18,3 +18,12 @@ export class InfoDto {
   })
   readonly information: string;
 }
+
+export class QueryDto {
+  @ApiProperty({
+    description: "쿼리",
+    example: genString(),
+    type: String,
+  })
+  readonly q: string;
+}
