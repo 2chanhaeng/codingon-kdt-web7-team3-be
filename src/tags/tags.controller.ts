@@ -3,6 +3,7 @@ import {
   UseGuards,
   Post,
   Get,
+  Query,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
@@ -36,4 +37,11 @@ export class TagsController {
   async reads(@Jwt("profileId") id: string) {
     return await this.tags.readTags(id);
   }
+
+  /** `GET /tags/search?q=:q`: 태그 검색 */
+  @Get("search")
+  async search(@Query("q") q: string) {
+    return await this.tags.searchTag(q);
+  }
+}
 }
