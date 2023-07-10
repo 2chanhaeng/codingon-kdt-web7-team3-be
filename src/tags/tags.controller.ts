@@ -92,4 +92,10 @@ export class TagController {
   async chats(@Param("id") id: string, @Query("cursor") cursor?: string) {
     return await this.tags.getChats(id, cursor);
   }
+
+  /** `GET /tag/:id/posts?cursor=:cursor`: 태그 주제 게시글 조회 */
+  @Get(":id/posts")
+  async posts(@Param("id") id: string, @Query("cursor") cursor?: string) {
+    return await this.tags.getPosts(id, cursor);
+  }
 }
