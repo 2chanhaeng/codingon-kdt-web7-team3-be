@@ -1,6 +1,8 @@
 import {
   Controller,
+  UseGuards,
   Post,
+  Get,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
@@ -19,5 +21,11 @@ export class TagsController {
   @Post()
   async create(@Body() body: CreateDto) {
     return await this.tags.createTag(body);
+  }
+
+  /** `GET /tag/:id`: 특정 태그 조회 */
+  @Get(":id")
+  async read(@Param("id") id: string) {
+    return await this.tags.readTag(id);
   }
 }
