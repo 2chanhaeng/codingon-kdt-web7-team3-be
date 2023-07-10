@@ -78,4 +78,9 @@ export class PostsService {
       where,
     });
   }
+
+  async deletePost(profileId: string, id: string) {
+    const where = { profileId, id };
+    return await this.delete(where);
+  }
 }
