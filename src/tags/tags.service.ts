@@ -57,4 +57,12 @@ export class TagsService {
     const tag = await this.update({ id }, data);
     return { success: !!tag };
   }
+
+  async delete(where: DeleteDto) {
+    return await this.db.tag.delete({ where });
+  }
+
+  async deleteTag(id: string) {
+    return await this.delete({ id });
+  }
 }
