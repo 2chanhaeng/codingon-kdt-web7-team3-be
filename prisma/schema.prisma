@@ -27,6 +27,7 @@ model Tag {
   posts       Post[]
   chatrooms   Chatroom[]
   subscribes  Subscribes[]
+  subjects    Subjects[]
 }
 
 model Profile {
@@ -84,4 +85,16 @@ model Chatroom {
   title    String
   profiles Profile[]
   tags     Tag[]
+  subjects Subjects[]
+}
+
+model Subjects {
+  chatroom   Chatroom @relation(fields: [chatroomId], references: [id])
+  chatroomId String
+  tag        Tag      @relation(fields: [tagId], references: [id])
+  tagId      String
+
+  @@id([chatroomId, tagId], name: "id")
+  @@index([chatroomId])
+  @@index([tagId])
 }
