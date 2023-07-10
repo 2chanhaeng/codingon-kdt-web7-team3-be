@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "~/prisma/prisma.service";
-import { PostDto } from "./posts.dto";
+import { PatchDto, PostDto } from "./posts.dto";
 
 @Injectable()
 export class PostsService {
@@ -60,6 +60,17 @@ export class PostsService {
       where,
       data,
     });
+  }
+
+  async updatePost(id: string, { tags, ...body }: PatchDto) {
+    const where = { id };
+    const data = {
+      tags: {
+        connect: tags?.map((id) => ({ id })),
+      },
+      ...body,
+    };
+    return await this.update(where, data);
   }
 
   async delete(where: Prisma.PostWhereUniqueInput) {
