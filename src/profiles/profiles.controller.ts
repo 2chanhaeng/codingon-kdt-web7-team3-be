@@ -9,11 +9,11 @@ import {
   Body,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "~/jwt/jwt.guard";
-import { ProfilesService } from "./profiles.service";
-import { CreateProfileDto, UpdateDto } from "./dto/profiles.dto";
 import { ApiBearerAuth } from "@nestjs/swagger";
+import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { Jwt } from "~/jwt/jwt.decorator";
+import { CreateProfileDto, UpdateDto } from "./dto/profiles.dto";
+import { ProfilesService } from "./profiles.service";
 
 @ApiTags("Profiles")
 @Controller("profiles")
