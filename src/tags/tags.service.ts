@@ -3,6 +3,7 @@ import { PrismaService } from "~/prisma/prisma.service";
 import {
   CreateDto,
   WhereUniqueDto,
+  SearchDto,
 } from "./tags.dto";
 
 @Injectable()
@@ -25,5 +26,21 @@ export class TagsService {
 
   async readTag(id: string) {
     return await this.read({ id });
+  }
+
+  async search(where: SearchDto) {
+    return await this.db.tag.findMany({ where });
+  }
+
+  async searchTag(q: string) {
+    return await this.search({ OR: this.searchTagOr(q) });
+  }
+
+  searchTagOr(q: string) {
+    return [this.contains("tagname")(q), this.contains("information")(q)];
+  }
+
+  contains(attr: keyof Prisma.TagWhereInput) {
+    return (q: string) => ({ [attr]: { contains: q } });
   }
 }
