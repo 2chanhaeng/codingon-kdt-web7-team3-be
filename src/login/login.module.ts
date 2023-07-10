@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
-import { LoginController } from "./login.controller";
-import { LoginService } from "./login.service";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { UserModule } from "~/user/user.module";
 import { JwtStrategy } from "~/jwt/jwt.strategy";
-import { ProfilesModule } from "../profiles/profiles.module";
+import { ProfilesModule } from "~/profiles/profiles.module";
+import { LoginController } from "./login.controller";
+import { LoginService } from "./login.service";
 
 @Module({
   imports: [
