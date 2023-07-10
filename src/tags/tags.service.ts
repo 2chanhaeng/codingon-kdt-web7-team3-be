@@ -75,4 +75,16 @@ export class TagsService {
     const postsArgs = { take, skip, cursor, orderBy };
     return await this.db.tag.findUnique({ where }).posts(postsArgs);
   }
+
+  async getProfiles(tagId: string, profileId?: string) {
+    const where = { id: tagId };
+    const take = 10;
+    const skip = profileId ? 1 : 0;
+    const cursor = profileId && { profile_tag: { tagId, profileId } };
+    const orderBy = {
+      profile: { followers: { _count: Prisma.SortOrder.desc } },
+    };
+    const profilesArgs = { take, skip, cursor, orderBy };
+    return await this.db.tag.findUnique({ where }).subscribes(profilesArgs);
+  }
 }
