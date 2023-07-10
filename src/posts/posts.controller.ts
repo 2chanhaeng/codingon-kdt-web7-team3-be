@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Query,
   UseGuards,
@@ -38,5 +39,13 @@ export class PostsController {
     @Query("cursor") cursor: string,
   ) {
     return this.posts.readsSubscribesAndFollows(id, cursor);
+  }
+
+  /**
+   * `GET /posts/:id`: 게시물 조회
+   */
+  @Get(":id")
+  async getPost(@Param("id") id: string) {
+    return this.posts.read({ id });
   }
 }
