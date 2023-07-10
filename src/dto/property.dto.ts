@@ -105,3 +105,23 @@ export class TagInfoDto extends InfoDto {
   @IsString()
   readonly information: string;
 }
+
+export class TagIdDto {
+  @ApiProperty({
+    description: "태그의 ID(UUID)",
+    example: genUuid(),
+    type: String,
+  })
+  @IsUUID()
+  readonly tagId: string;
+}
+
+export class ProfIdDto {
+  @ApiProperty({
+    description: "프로필의 ID(UUID)",
+    example: genUuid(),
+    type: String,
+  })
+  @IsUUID()
+  readonly profileId: string;
+}

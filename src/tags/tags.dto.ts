@@ -1,8 +1,13 @@
+import { ValidateNested } from "class-validator";
 import { IntersectionType, PartialType } from "@nestjs/swagger";
 import { Prisma } from "@prisma/client";
-import { ValidateNested } from "class-validator";
 import { IdDto } from "~/dto/abstract.dto";
-import { TagNameDto, TagInfoDto } from "~/dto/property.dto";
+import {
+  TagNameDto,
+  TagInfoDto,
+  TagIdDto,
+  ProfIdDto,
+} from "~/dto/property.dto";
 
 class NameAndInfoDto extends IntersectionType(TagNameDto, TagInfoDto) {}
 export class CreateDto
@@ -32,3 +37,7 @@ export class SearchDto implements Prisma.TagWhereInput {
   @ValidateNested({ each: true })
   readonly OR: Prisma.TagWhereInput[];
 }
+
+export class SubscribeDto
+  extends IntersectionType(TagIdDto, ProfIdDto)
+  implements Prisma.SubscribesUncheckedCreateInput {}
