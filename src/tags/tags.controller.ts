@@ -49,4 +49,5 @@ export class TagsController {
 @ApiTags("Tag")
 @Controller("tag")
 export class TagController {
+  constructor(private readonly tags: TagsService) {}
 }
