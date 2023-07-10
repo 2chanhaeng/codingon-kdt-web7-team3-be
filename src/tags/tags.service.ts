@@ -48,4 +48,13 @@ export class TagsService {
     const where = { profiles: { some: { id: profileId } } };
     return await this.db.tag.findMany({ where });
   }
+
+  async update(where: WhereUniqueDto, data: UpdateDataDto) {
+    return await this.db.tag.update({ where, data });
+  }
+
+  async updateTag(id: string, data: UpdateBodyDto) {
+    const tag = await this.update({ id }, data);
+    return { success: !!tag };
+  }
 }
