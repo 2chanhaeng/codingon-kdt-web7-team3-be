@@ -1,6 +1,7 @@
 import { IsString, IsUUID } from "class-validator";
 import { ApiProperty, IntersectionType } from "@nestjs/swagger";
 import { genString, genUuid } from "@/utils/example";
+import { InfoDto } from "./abstract.dto";
 
 export class UserIdDto {
   @ApiProperty({
@@ -83,4 +84,24 @@ export class TagsDto {
   })
   @IsUUID("all", { each: true })
   readonly tags: string[];
+}
+
+export class TagNameDto {
+  @ApiProperty({
+    description: "태그의 이름",
+    example: genString(),
+    type: String,
+  })
+  @IsString()
+  readonly tagname: string;
+}
+
+export class TagInfoDto extends InfoDto {
+  @ApiProperty({
+    description: "태그의 정보",
+    example: genString(),
+    type: String,
+  })
+  @IsString()
+  readonly information: string;
 }
