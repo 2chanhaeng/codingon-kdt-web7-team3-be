@@ -69,4 +69,15 @@ export class TagController {
   async delete(@Param("id") id: string) {
     return await this.tags.deleteTag(id);
   }
+
+  /** `GET /tag/:id/subscribe: 태그 구독 */
+  @ApiBearerAuth("access")
+  @UseGuards(JwtAuthGuard)
+  @Get(":id/subscribe")
+  async subscribe(
+    @Jwt("profileId") profileId: string,
+    @Param("id") tagId: string,
+  ) {
+    return await this.tags.subscribeTag(profileId, tagId);
+  }
 }
