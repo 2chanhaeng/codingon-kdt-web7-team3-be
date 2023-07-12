@@ -8,6 +8,7 @@ import {
   Patch,
   Body,
   Delete,
+  Res,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
@@ -29,6 +30,12 @@ export class TagsController {
     return tags;
   }
 
+  /** `GET /tags/search?q=:q`: 태그 검색 */
+  @Get("search")
+  async search(@Query("q") q: string) {
+    return await this.tags.searchTag(q);
+  }
+
   /** `POST /tags`: 태그 생성 */
   @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
@@ -48,13 +55,8 @@ export class TagsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async reads(@Jwt("profileId") id: string) {
-    return await this.tags.readTags(id);
-  }
-
-  /** `GET /tags/search?q=:q`: 태그 검색 */
-  @Get("search")
-  async search(@Query("q") q: string) {
-    return await this.tags.searchTag(q);
+    const tags = await this.tags.readTags(id);
+    return tags;
   }
 }
 
