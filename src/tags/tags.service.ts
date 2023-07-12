@@ -138,8 +138,9 @@ export class TagsService {
           _count: Prisma.SortOrder.desc,
         },
       },
-    }; // TODO: 가입자 순으로 정렬
-    const chatroomsArgs = { take, skip, cursor, orderBy };
+    };
+    const select: Prisma.SubjectsSelect = { chatroom: true };
+    const chatroomsArgs = { take, skip, cursor, orderBy, select };
     return await this.db.tag.findUnique({ where }).subjects(chatroomsArgs);
   }
 
