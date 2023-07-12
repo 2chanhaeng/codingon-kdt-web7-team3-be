@@ -51,7 +51,7 @@ export class TagsService {
   }
 
   async readTags(profileId: string) {
-    const where = { profiles: { some: { id: profileId } } };
+    const where = { subscribes: { some: { profileId } } };
     return await this.db.tag.findMany({ where });
   }
 
