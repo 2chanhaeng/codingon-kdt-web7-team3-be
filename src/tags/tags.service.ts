@@ -20,8 +20,9 @@ export class TagsService {
     return await this.db.tag.create({ data, select });
   }
 
-  async createTag(data: CreateDto) {
+  async createTagAndFollow(profileId: string, data: CreateDto) {
     const tag = await this.create(data);
+    if (tag) await this.subscribeTag(profileId, tag.id);
     return { success: !!tag };
   }
 
@@ -50,8 +51,29 @@ export class TagsService {
   }
 
   async readTags(profileId: string) {
-    const where = { profiles: { some: { id: profileId } } };
+    const where = { subscribes: { some: { profileId } } };
     return await this.db.tag.findMany({ where });
+  }
+
+  async readFamous() {
+    const select: Prisma.TagSelect = {
+      id: true,
+      tagname: true,
+      information: true,
+      _count: {
+        select: {
+          subscribes: true,
+        },
+      },
+    };
+    const orderBy: Prisma.TagOrderByWithRelationInput = {
+      subscribes: { _count: Prisma.SortOrder.desc },
+    };
+    const tags = await this.db.tag.findMany({ select, orderBy });
+    return tags.map(({ _count, ...tag }) => ({
+      count: _count.subscribes,
+      ...tag,
+    }));
   }
 
   async update(where: WhereUniqueDto, data: UpdateDataDto) {
@@ -77,7 +99,12 @@ export class TagsService {
     const skip = cursorId ? 1 : 0;
     const cursor = cursorId ? { id: cursorId } : undefined;
     const orderBy = { createdAt: Prisma.SortOrder.desc };
-    const postsArgs = { take, skip, cursor, orderBy };
+    const select = {
+      id: true,
+      content: true,
+      profile: { select: { id: true, profname: true } },
+    };
+    const postsArgs = { take, skip, cursor, orderBy, select };
     return await this.db.tag.findUnique({ where }).posts(postsArgs);
   }
 
@@ -89,8 +116,15 @@ export class TagsService {
     const orderBy = {
       profile: { followers: { _count: Prisma.SortOrder.desc } },
     };
-    const profilesArgs = { take, skip, cursor, orderBy };
-    return await this.db.tag.findUnique({ where }).subscribes(profilesArgs);
+    const select = {
+      profile: { select: { id: true, profname: true, information: true } },
+    };
+    const profilesArgs = { take, skip, cursor, orderBy, select };
+    const subscribers = await this.db.tag
+      .findUnique({ where })
+      .subscribes(profilesArgs);
+    const profiles = subscribers.map(({ profile }) => profile);
+    return profiles;
   }
 
   async getChats(tagId: string, chatroomId?: string) {
@@ -104,8 +138,9 @@ export class TagsService {
           _count: Prisma.SortOrder.desc,
         },
       },
-    }; // TODO: 가입자 순으로 정렬
-    const chatroomsArgs = { take, skip, cursor, orderBy };
+    };
+    const select: Prisma.SubjectsSelect = { chatroom: true };
+    const chatroomsArgs = { take, skip, cursor, orderBy, select };
     return await this.db.tag.findUnique({ where }).subjects(chatroomsArgs);
   }
 

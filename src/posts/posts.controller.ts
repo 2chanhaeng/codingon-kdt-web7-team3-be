@@ -14,6 +14,7 @@ import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { Jwt } from "~/jwt/jwt.decorator";
 import { PostsService } from "./posts.service";
 import { PostDto, PatchBodyDto, SearchDto } from "./posts.dto";
+import { CursorQureyDto, QueryDto } from "../dto/abstract.dto";
 
 @ApiTags("Posts")
 @Controller("posts")
@@ -49,6 +50,19 @@ export class PostsController {
   @Get(":id")
   async getPost(@Param("id") id: string) {
     return this.posts.read({ id });
+  }
+
+  /**
+   * `GET /posts`: 구독중인 태그와 프로필의 게시물 조회
+   */
+  @ApiBearerAuth("access")
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async getSubscribes(
+    @Jwt("profileId") id: string,
+    @Query() { cursor }: CursorQureyDto,
+  ) {
+    return this.posts.readsSubscribesAndFollows(id, cursor);
   }
 
   /**

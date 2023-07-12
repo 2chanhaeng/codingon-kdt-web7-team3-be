@@ -8,6 +8,7 @@ import {
   Patch,
   Body,
   Delete,
+  Res,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
@@ -20,12 +21,27 @@ import { CreateDto, UpdateBodyDto } from "./tags.dto";
 export class TagsController {
   constructor(private readonly tags: TagsService) {}
 
+  /** `GET /tags/famous`: 구독중인 태그 조회 */
+  @Get("famous")
+  async readsFamous() {
+    console.log("famous");
+    const tags = await this.tags.readFamous();
+    console.log(tags);
+    return tags;
+  }
+
+  /** `GET /tags/search?q=:q`: 태그 검색 */
+  @Get("search")
+  async search(@Query("q") q: string) {
+    return await this.tags.searchTag(q);
+  }
+
   /** `POST /tags`: 태그 생성 */
   @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() body: CreateDto) {
-    return await this.tags.createTag(body);
+  async create(@Jwt("profileId") profileId: string, @Body() body: CreateDto) {
+    return await this.tags.createTagAndFollow(profileId, body);
   }
 
   /** `GET /tag/:id`: 특정 태그 조회 */
@@ -39,13 +55,8 @@ export class TagsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async reads(@Jwt("profileId") id: string) {
-    return await this.tags.readTags(id);
-  }
-
-  /** `GET /tags/search?q=:q`: 태그 검색 */
-  @Get("search")
-  async search(@Query("q") q: string) {
-    return await this.tags.searchTag(q);
+    const tags = await this.tags.readTags(id);
+    return tags;
   }
 }
 

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "~/prisma/prisma.service";
 import { PatchDto, PostDto } from "./posts.dto";
@@ -22,7 +22,16 @@ export class PostsService {
     return await this.create(data);
   }
 
-  async reads(
+  async reads(data: Prisma.PostFindManyArgs) {
+    try {
+      return await this.prisma.post.findMany(data);
+    } catch (e) {
+      console.log(e);
+      throw BadRequestException;
+    }
+  }
+
+  async readsWithCursor(
     where: Prisma.PostWhereInput,
     cursor?: Prisma.PostWhereUniqueInput,
   ) {
@@ -33,15 +42,30 @@ export class PostsService {
     return await this.prisma.post.findMany(findManyArgs);
   }
 
+  async makeCursor(cursor: Prisma.PostWhereUniqueInput) {
+    if (!cursor) return undefined;
+    const take = 10;
+    const skip = 1;
+    const orderBy = { createdAt: Prisma.SortOrder.desc };
+    return { take, skip, orderBy, cursor };
+  }
+
   async readsSubscribesAndFollows(profileId: string, id: string) {
     const where = {
       OR: [
         { tags: { some: { profiles: { some: { id: profileId } } } } }, // 구독한 태그의 게시물
         { profile: { follows: { some: { fromId: profileId } } } }, // 구독한 유저의 게시물
+        { profile: { id: profileId } }, // 본인의 게시물
       ],
     };
-    const cursor = id ? { id } : undefined;
-    return await this.reads(where, cursor);
+    const select: Prisma.PostSelect = {
+      id: true,
+      content: true,
+      profile: { select: { id: true, profname: true } },
+      tags: true,
+    };
+    const cursorData = this.makeCursor({ id });
+    return await this.reads({ where, select, ...cursorData });
   }
 
   async read(where: Prisma.PostWhereUniqueInput) {
