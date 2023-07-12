@@ -116,8 +116,15 @@ export class TagsService {
     const orderBy = {
       profile: { followers: { _count: Prisma.SortOrder.desc } },
     };
-    const profilesArgs = { take, skip, cursor, orderBy };
-    return await this.db.tag.findUnique({ where }).subscribes(profilesArgs);
+    const select = {
+      profile: { select: { id: true, profname: true, information: true } },
+    };
+    const profilesArgs = { take, skip, cursor, orderBy, select };
+    const subscribers = await this.db.tag
+      .findUnique({ where })
+      .subscribes(profilesArgs);
+    const profiles = subscribers.map(({ profile }) => profile);
+    return profiles;
   }
 
   async getChats(tagId: string, chatroomId?: string) {
