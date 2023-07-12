@@ -11,7 +11,7 @@ import {
 import { Server, Socket } from "socket.io";
 import { RoomDto, MessageDto } from "./dto/chats.dto";
 
-@WebSocketGateway(81, { transports: ["websocket"] })
+@WebSocketGateway({ transports: ["websocket"] })
 export class ChatsGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
