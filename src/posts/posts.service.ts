@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "~/prisma/prisma.service";
 import { PatchDto, PostDto } from "./posts.dto";
@@ -22,7 +22,16 @@ export class PostsService {
     return await this.create(data);
   }
 
-  async reads(
+  async reads(data: Prisma.PostFindManyArgs) {
+    try {
+      return await this.prisma.post.findMany(data);
+    } catch (e) {
+      console.log(e);
+      throw BadRequestException;
+    }
+  }
+
+  async readsWithCursor(
     where: Prisma.PostWhereInput,
     cursor?: Prisma.PostWhereUniqueInput,
   ) {
