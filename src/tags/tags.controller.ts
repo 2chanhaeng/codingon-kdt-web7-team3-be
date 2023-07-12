@@ -20,6 +20,15 @@ import { CreateDto, UpdateBodyDto } from "./tags.dto";
 export class TagsController {
   constructor(private readonly tags: TagsService) {}
 
+  /** `GET /tags/famous`: 구독중인 태그 조회 */
+  @Get("famous")
+  async readsFamous() {
+    console.log("famous");
+    const tags = await this.tags.readFamous();
+    console.log(tags);
+    return tags;
+  }
+
   /** `POST /tags`: 태그 생성 */
   @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
