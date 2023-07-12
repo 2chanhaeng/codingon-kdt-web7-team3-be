@@ -55,6 +55,27 @@ export class TagsService {
     return await this.db.tag.findMany({ where });
   }
 
+  async readFamous() {
+    const select: Prisma.TagSelect = {
+      id: true,
+      tagname: true,
+      information: true,
+      _count: {
+        select: {
+          subscribes: true,
+        },
+      },
+    };
+    const orderBy: Prisma.TagOrderByWithRelationInput = {
+      subscribes: { _count: Prisma.SortOrder.desc },
+    };
+    const tags = await this.db.tag.findMany({ select, orderBy });
+    return tags.map(({ _count, ...tag }) => ({
+      count: _count.subscribes,
+      ...tag,
+    }));
+  }
+
   async update(where: WhereUniqueDto, data: UpdateDataDto) {
     return await this.db.tag.update({ where, data });
   }
