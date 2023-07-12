@@ -2,6 +2,12 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { UserModule } from "./user/user.module";
 import { LoginModule } from "./login/login.module";
+import { SignupModule } from "./signup/signup.module";
+import { ProfilesModule } from "./profiles/profiles.module";
+import { PrismaModule } from "./prisma/prisma.module";
+import { ChatsModule } from "./chats/chats.module";
+import { PostsModule } from "./posts/posts.module";
+import { TagsModule } from "./tags/tags.module";
 
 @Module({
   imports: [
@@ -12,6 +18,12 @@ import { LoginModule } from "./login/login.module";
     }),
     UserModule,
     LoginModule,
+    SignupModule,
+    ProfilesModule,
+    PrismaModule,
+    ChatsModule,
+    PostsModule,
+    TagsModule,
   ],
   controllers: [],
   providers: [],

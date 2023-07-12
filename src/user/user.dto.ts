@@ -1,28 +1,11 @@
-import { IsString } from "class-validator";
+import { IntersectionType } from "@nestjs/swagger";
+import { IdDto } from "~/dto/abstract.dto";
+import { PasswordDto, SaltDto, UnPwDto } from "~/dto/property.dto";
 
-export class UserAuthDto {
-  @IsString()
-  id: string;
-
-  @IsString()
-  salt: string;
-
-  @IsString()
-  password: string;
-}
-
-export class CreateUserDto {
-  @IsString()
-  username: string;
-
-  @IsString()
-  password: string;
-}
-
-export class LoginUserDto {
-  @IsString()
-  username: string;
-
-  @IsString()
-  password: string;
-}
+export class SignupUserDto extends UnPwDto {}
+export class LoginUserDto extends UnPwDto {}
+export class UserAuthDto extends IntersectionType(
+  IdDto,
+  SaltDto,
+  PasswordDto,
+) {}
