@@ -19,7 +19,7 @@ async function bootstrap() {
     allowedHeaders: "Content-Type, Accept",
   });
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup("api", app, document);
+  SwaggerModule.setup("swagger", app, document);
   // log all requests
   await app.listen(8000);
 }
