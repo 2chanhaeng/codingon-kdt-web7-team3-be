@@ -27,3 +27,13 @@ export class QueryDto {
   })
   readonly q: string;
 }
+
+export class CursorQureyDto {
+  @ApiProperty({
+    description: "커서",
+    required: false,
+    example: genString(),
+    type: String,
+  })
+  readonly cursor: string;
+}
