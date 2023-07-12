@@ -55,10 +55,17 @@ export class PostsService {
       OR: [
         { tags: { some: { profiles: { some: { id: profileId } } } } }, // 구독한 태그의 게시물
         { profile: { follows: { some: { fromId: profileId } } } }, // 구독한 유저의 게시물
+        { profile: { id: profileId } }, // 본인의 게시물
       ],
     };
-    const cursor = id ? { id } : undefined;
-    return await this.reads(where, cursor);
+    const select: Prisma.PostSelect = {
+      id: true,
+      content: true,
+      profile: { select: { id: true, profname: true } },
+      tags: true,
+    };
+    const cursorData = this.makeCursor({ id });
+    return await this.reads({ where, select, ...cursorData });
   }
 
   async read(where: Prisma.PostWhereUniqueInput) {
