@@ -6,6 +6,8 @@ import { ProfInfoDto, ProfNameDto } from "./property.dto";
 
 /** 프로필 생성 DTO */
 class ProfNameInfoDto extends IntersectionType(ProfNameDto, ProfInfoDto) {}
+export class CreateProfBodyDto extends ProfNameInfoDto {}
+
 export class CreateProfileDto
   extends IntersectionType(UserIdDto, ProfNameInfoDto)
   implements Prisma.ProfileUncheckedCreateInput {}

@@ -12,7 +12,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { Jwt } from "~/jwt/jwt.decorator";
-import { CreateProfileDto, UpdateDto } from "./dto/profiles.dto";
+import { CreateProfBodyDto, UpdateDto } from "./dto/profiles.dto";
 import { ProfilesService } from "./profiles.service";
 
 @ApiTags("Profiles")
@@ -26,7 +26,7 @@ export class ProfilesController {
   @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Jwt("userId") id: string, @Body() body: CreateProfileDto) {
+  async create(@Jwt("userId") id: string, @Body() body: CreateProfBodyDto) {
     return this.profiles.create({ userId: id, ...body });
   }
 
