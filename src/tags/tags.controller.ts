@@ -24,8 +24,8 @@ export class TagsController {
   @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() body: CreateDto) {
-    return await this.tags.createTag(body);
+  async create(@Jwt("profileId") profileId: string, @Body() body: CreateDto) {
+    return await this.tags.createTagAndFollow(profileId, body);
   }
 
   /** `GET /tag/:id`: 특정 태그 조회 */

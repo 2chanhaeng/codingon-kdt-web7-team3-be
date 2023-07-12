@@ -20,8 +20,9 @@ export class TagsService {
     return await this.db.tag.create({ data, select });
   }
 
-  async createTag(data: CreateDto) {
+  async createTagAndFollow(profileId: string, data: CreateDto) {
     const tag = await this.create(data);
+    if (tag) await this.subscribeTag(profileId, tag.id);
     return { success: !!tag };
   }
 
