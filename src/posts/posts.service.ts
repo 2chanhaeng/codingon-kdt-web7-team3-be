@@ -33,6 +33,14 @@ export class PostsService {
     return await this.prisma.post.findMany(findManyArgs);
   }
 
+  async makeCursor(cursor: Prisma.PostWhereUniqueInput) {
+    if (!cursor) return undefined;
+    const take = 10;
+    const skip = 1;
+    const orderBy = { createdAt: Prisma.SortOrder.desc };
+    return { take, skip, orderBy, cursor };
+  }
+
   async readsSubscribesAndFollows(profileId: string, id: string) {
     const where = {
       OR: [
