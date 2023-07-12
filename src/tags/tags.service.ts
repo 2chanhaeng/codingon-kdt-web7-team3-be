@@ -99,7 +99,12 @@ export class TagsService {
     const skip = cursorId ? 1 : 0;
     const cursor = cursorId ? { id: cursorId } : undefined;
     const orderBy = { createdAt: Prisma.SortOrder.desc };
-    const postsArgs = { take, skip, cursor, orderBy };
+    const select = {
+      id: true,
+      content: true,
+      profile: { select: { id: true, profname: true } },
+    };
+    const postsArgs = { take, skip, cursor, orderBy, select };
     return await this.db.tag.findUnique({ where }).posts(postsArgs);
   }
 
