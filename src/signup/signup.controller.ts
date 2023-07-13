@@ -10,6 +10,10 @@ export class SignupController {
 
   @Post()
   async create(@Body() body: SignupUserDto) {
-    return this.signupService.signup(body);
+    try {
+      return this.signupService.signup(body);
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

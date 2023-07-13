@@ -14,7 +14,7 @@ import { JwtAuthGuard } from "~/jwt/jwt.guard";
 import { Jwt } from "~/jwt/jwt.decorator";
 import { PostsService } from "./posts.service";
 import { PostDto, PatchBodyDto, SearchDto } from "./posts.dto";
-import { CursorQureyDto, QueryDto } from "../dto/abstract.dto";
+import { CursorQureyDto } from "../dto/abstract.dto";
 
 @ApiTags("Posts")
 @Controller("posts")
@@ -28,7 +28,11 @@ export class PostsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Jwt("profileId") id: string, @Body() body: PostDto) {
-    return this.posts.createPost(id, body);
+    try {
+      return this.posts.createPost(id, body);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -41,7 +45,11 @@ export class PostsController {
     @Jwt("profileId") id: string,
     @Query("cursor") cursor: string,
   ) {
-    return this.posts.readsSubscribesAndFollows(id, cursor);
+    try {
+      return this.posts.readsSubscribesAndFollows(id, cursor);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -49,7 +57,11 @@ export class PostsController {
    */
   @Get(":id")
   async getPost(@Param("id") id: string) {
-    return this.posts.read({ id });
+    try {
+      return this.posts.read({ id });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -62,7 +74,11 @@ export class PostsController {
     @Jwt("profileId") id: string,
     @Query() { cursor }: CursorQureyDto,
   ) {
-    return this.posts.readsSubscribesAndFollows(id, cursor);
+    try {
+      return this.posts.readsSubscribesAndFollows(id, cursor);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -76,7 +92,11 @@ export class PostsController {
     @Param("id") id: string,
     @Body() body: PatchBodyDto,
   ) {
-    return this.posts.updatePost(profileId, { id, ...body });
+    try {
+      return this.posts.updatePost(profileId, { id, ...body });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -86,7 +106,11 @@ export class PostsController {
   @UseGuards(JwtAuthGuard)
   @Delete(":id")
   async delete(@Jwt("profileId") profileId: string, @Param("id") id: string) {
-    return this.posts.deletePost(profileId, id);
+    try {
+      return this.posts.deletePost(profileId, id);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -95,6 +119,10 @@ export class PostsController {
    */
   @Post("search")
   async search(@Body() { q, tags }: SearchDto) {
-    return this.posts.searchPost(q, tags);
+    try {
+      return this.posts.searchPost(q, tags);
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

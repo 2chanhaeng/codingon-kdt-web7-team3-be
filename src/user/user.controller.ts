@@ -12,14 +12,21 @@ export class UserController {
 
   @Get()
   async findAll() {
-    return this.userService.users();
+    try {
+      return this.userService.users();
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   @ApiBearerAuth("access")
   @UseGuards(JwtAuthGuard)
   @Get(":username")
   async findOne(@Param() where: UsernameDto) {
-    // DEBUG
-    return this.userService.user(where);
+    try {
+      return this.userService.user(where);
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

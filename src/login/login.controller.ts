@@ -10,6 +10,10 @@ export class LoginController {
 
   @Post()
   login(@Body() { username, password }: LoginUserDto) {
-    return this.loginService.login(username, password);
+    try {
+      return this.loginService.login(username, password);
+    } catch (e) {
+      console.log(e);
+    }
   }
 }

@@ -23,14 +23,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     userId,
     profileId,
   }: JwtValidateDto): Promise<JwtValidateDto> {
-    const user = await this.user.get(userId);
-    if (!user) {
-      throw new UnauthorizedException("접근 오류");
+    try {
+      const user = await this.user.get(userId);
+      if (!user) {
+        throw new UnauthorizedException("접근 오류");
+      }
+      if (profileId) {
+        const profile = await this.profile.isUserOwnProfile(userId, profileId);
+        if (profile) return { userId, profileId };
+      }
+      return { userId }; // request.user에 해당 내용을 넣어준다 (Passport 라이브러리가 해줌)
+    } catch (e) {
+      console.log(e);
     }
-    if (profileId) {
-      const profile = await this.profile.isUserOwnProfile(userId, profileId);
-      if (profile) return { userId, profileId };
-    }
-    return { userId }; // request.user에 해당 내용을 넣어준다 (Passport 라이브러리가 해줌)
   }
 }

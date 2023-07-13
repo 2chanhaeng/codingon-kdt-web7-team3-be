@@ -27,7 +27,11 @@ export class ProfilesController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Jwt("userId") id: string, @Body() body: CreateProfBodyDto) {
-    return this.profiles.create({ userId: id, ...body });
+    try {
+      return this.profiles.create({ userId: id, ...body });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -37,7 +41,11 @@ export class ProfilesController {
   @UseGuards(JwtAuthGuard)
   @Patch()
   async update(@Jwt("profileId") id: string, @Body() body: UpdateDto) {
-    return this.profiles.update({ id }, body);
+    try {
+      return this.profiles.update({ id }, body);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -47,8 +55,11 @@ export class ProfilesController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getByUserId(@Jwt("userId") id: string) {
-    console.log("getByUserId", id);
-    return this.profiles.getByUserId(id);
+    try {
+      return this.profiles.getByUserId(id);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -56,7 +67,11 @@ export class ProfilesController {
    */
   @Get("famous")
   async getFamousWithCursor(@Query("cursor") cursor: string) {
-    return this.profiles.getByFollowersCountRankings(cursor);
+    try {
+      return this.profiles.getByFollowersCountRankings(cursor);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -71,7 +86,11 @@ export class ProfilesController {
     @Jwt("userId") userId: string,
     @Param("id") profileId: string,
   ) {
-    return this.profiles.addProfileToAccess(userId, profileId);
+    try {
+      return this.profiles.addProfileToAccess(userId, profileId);
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 
@@ -85,7 +104,11 @@ export class ProfileController {
    */
   @Get()
   async get(@Param("id") id: string) {
-    return this.profiles.get(id);
+    try {
+      return this.profiles.get(id);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -93,7 +116,11 @@ export class ProfileController {
    */
   @Get("posts")
   async getPosts(@Param("id") id: string, @Query("cursor") cursor?: string) {
-    return this.profiles.getPosts({ id }, cursor);
+    try {
+      return this.profiles.getPosts({ id }, cursor);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -101,7 +128,11 @@ export class ProfileController {
    */
   @Get("tags")
   async getTags(@Param("id") id: string) {
-    return this.profiles.getTags({ id });
+    try {
+      return this.profiles.getTags({ id });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -109,8 +140,12 @@ export class ProfileController {
    */
   @Get("follows")
   async getFollows(@Param("id") id: string, @Query("cursor") cursor?: string) {
-    const cursorId = cursor ? { fromId: id, toId: cursor } : undefined;
-    return this.profiles.getFollows({ id }, cursorId);
+    try {
+      const cursorId = cursor ? { fromId: id, toId: cursor } : undefined;
+      return this.profiles.getFollows({ id }, cursorId);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -121,8 +156,12 @@ export class ProfileController {
     @Param("id") id: string,
     @Query("cursor") cursor?: string,
   ) {
-    const cursorId = cursor ? { fromId: cursor, toId: id } : undefined;
-    return this.profiles.getFollows({ id }, cursorId);
+    try {
+      const cursorId = cursor ? { fromId: cursor, toId: id } : undefined;
+      return this.profiles.getFollows({ id }, cursorId);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   /**
@@ -132,6 +171,10 @@ export class ProfileController {
   @UseGuards(JwtAuthGuard)
   @Get("follow")
   async follow(@Jwt("userId") fromId: string, @Param("id") toId: string) {
-    return this.profiles.follow({ fromId, toId });
+    try {
+      return this.profiles.follow({ fromId, toId });
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
